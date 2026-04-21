@@ -51,9 +51,8 @@ a { color: var(--brand); }
 }
 
 .hero-logo {
-  width: 340px;
-  height: 340px;
-  object-fit: contain;
+  width: min(540px, 92vw);
+  height: auto;
   display: block;
   margin: 0 auto 1.75rem;
   border-radius: 18px;
