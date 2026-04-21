@@ -3,133 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GNAT-o-sphere — GNAT's Not A TIP</title>
-  <meta name="description" content="GNAT gives security teams a stable way to ingest, model, enrich, export, automate, and investigate intelligence across a large connector surface without rebuilding around every vendor.">
+  <title>GNAT-o-sphere</title>
+  <meta name="description" content="The GNAT ecosystem — open-source threat intelligence tools built for analysts, investigators, and engineers.">
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="images/gnat-logo-32.png">
   <link rel="icon" type="image/png" sizes="64x64" href="images/gnat-logo-64.png">
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-  <meta property="og:title" content="GNAT-o-sphere — GNAT's Not A TIP">
-  <meta property="og:description" content="Cyber Threat Intel Made Simple. 159 connectors, STIX 2.1 native, workflow portability.">
+  <meta property="og:title" content="GNAT-o-sphere">
+  <meta property="og:description" content="Open-source threat intelligence tools built for analysts, investigators, and engineers.">
   <meta property="og:image" content="images/og-image.png">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="gnat-theme.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <header class="hero">
     <div class="wrap">
-      <p class="kicker">GNAT-o-sphere / core platform</p>
-      <img src="images/gnat-logo-128.png" alt="GNAT" width="80" height="80" style="display:block;margin-bottom:1rem;">
-      <h1 style="margin-top:0;">GNAT's Not A TIP</h1>
-      <p style="font-size:1.25rem;margin-top:-.5rem;color:var(--muted);">Cyber Threat Intel Made Simple</p>
-      <p style="max-width:640px;">GNAT gives security teams a stable way to ingest, model, enrich, export, automate, and investigate intelligence across a large connector surface without rebuilding around every vendor.</p>
-      <div>
-        <span class="badge">159 connectors</span>
-        <span class="badge">STIX 2.1 native</span>
-        <span class="badge">reports + investigations</span>
-        <span class="badge">workflow portability</span>
-      </div>
+      <img class="hero-logo" src="images/gnat-logo-full.png" alt="GNAT">
+      <h1>GNAT<span>-o-sphere</span></h1>
+      <p>Open-source threat intelligence tools built around a common integration surface, so your workflows stay portable across the whole ecosystem.</p>
     </div>
   </header>
 
   <main>
+    <section class="section">
+      <div class="wrap">
+        <p class="section-label">The ecosystem</p>
+        <div class="ecosystem">
 
-    <section class="wrap">
-      <h2>Why GNAT exists</h2>
-      <p>Most security teams are forced to keep rebuilding the same automation, enrichment, and reporting logic around slightly different APIs and data models. GNAT exists to reduce that churn by standardizing the integration surface and keeping intelligence workflows portable.</p>
-    </section>
+          <div class="card primary">
+            <span class="card-tag">Core platform</span>
+            <h2>GNAT</h2>
+            <p class="sub">GNAT's Not A TIP</p>
+            <p>Ingest, normalize, enrich, and investigate threat intelligence across 159 connectors. STIX 2.1 keeps your data model and workflows portable between tools.</p>
+            <a class="card-link" href="https://github.com/wrhalpin/gnat-o-sphere">View on GitHub</a>
+          </div>
 
-    <section class="wrap">
-      <h2>What GNAT does</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>Normalize</h3>
-          <p>Unify many data sources behind one operating model.</p>
-        </div>
-        <div class="card">
-          <h3>Translate</h3>
-          <p>Use STIX 2.1 as the stable contract between tools and workflows.</p>
-        </div>
-        <div class="card">
-          <h3>Support analysis</h3>
-          <p>Build investigations, reports, and reusable workflows rather than isolated lookups.</p>
-        </div>
-        <div class="card">
-          <h3>Anchor the ecosystem</h3>
-          <p>Provide the hub platform that SandGNAT and RedGNAT plug into.</p>
+          <div class="card">
+            <span class="card-tag">Addon</span>
+            <h2>SandGNAT</h2>
+            <p>Automated malware sandbox analysis that feeds detonation results directly into GNAT investigations and reports.</p>
+          </div>
+
+          <div class="card">
+            <span class="card-tag">Addon</span>
+            <h2>RedGNAT</h2>
+            <p>Collaborative adversarial readiness testing (CART) with explicit safety boundaries, plugged into the GNAT workflow engine.</p>
+          </div>
+
         </div>
       </div>
     </section>
-
-    <section class="wrap">
-      <h2>Documentation by intent</h2>
-      <p>GNAT uses the <a href="https://diataxis.fr">Diátaxis</a> model so readers can go directly to the kind of material they need.</p>
-      <table class="quadrants">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Action (doing)</th>
-            <th>Study (reading)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>Learning</th>
-            <td><strong>Tutorials</strong><br>Guided, newcomer-safe walkthroughs.</td>
-            <td><strong>Explanation</strong><br>Architecture, rationale, and design choices.</td>
-          </tr>
-          <tr>
-            <th>Working</th>
-            <td><strong>How-to guides</strong><br>Task-focused procedures and recipes.</td>
-            <td><strong>Reference</strong><br>Exact technical behavior, config, and interfaces.</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <section class="wrap">
-      <h2>Start here by role</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>Analysts</h3>
-          <p>Use GNAT when you need to correlate intelligence across multiple systems and keep the output portable.</p>
-        </div>
-        <div class="card">
-          <h3>Investigators</h3>
-          <p>Use GNAT when you need a repeatable path from seed indicators to evidence and report output.</p>
-        </div>
-        <div class="card">
-          <h3>Engineers</h3>
-          <p>Use GNAT when integration churn is the real bottleneck.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="wrap">
-      <h2>The GNAT-o-sphere</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>SandGNAT</h3>
-          <p>Automated malware sandbox addon for GNAT.</p>
-        </div>
-        <div class="card">
-          <h3>RedGNAT</h3>
-          <p>CART addon for GNAT with explicit safety boundaries.</p>
-        </div>
-      </div>
-    </section>
-
   </main>
 
+  <hr>
   <footer>
-    <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+    <div class="wrap footer-inner">
       <span>GNAT — GNAT's Not A TIP</span>
-      <span>
-        <a href="https://github.com/wrhalpin/gnat-o-sphere">GitHub</a>
-        &nbsp;·&nbsp;
-        <span style="color:var(--muted);">Apache 2.0</span>
-      </span>
+      <span><a href="https://github.com/wrhalpin/gnat-o-sphere">GitHub</a> &nbsp;·&nbsp; Apache 2.0</span>
     </div>
   </footer>
 
