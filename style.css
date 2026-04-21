@@ -51,7 +51,8 @@ a { color: var(--brand); }
 }
 
 .hero-logo {
-  width: min(540px, 92vw);
+  width: 540px;
+  max-width: 92vw;
   height: auto;
   display: block;
   margin: 0 auto 1.75rem;
@@ -119,6 +120,15 @@ a { color: var(--brand); }
   margin: 0 0 .2rem;
   font-size: 1.4rem;
   color: var(--brand);
+}
+
+.card h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.card h2 a:hover {
+  text-decoration: underline;
 }
 
 .card .sub {
