@@ -106,6 +106,8 @@ a { color: var(--brand); }
 
 /* Per-product accent colors */
 .card--gnat     { --accent: #ffffff; }
+.card--gnat .card-link { background: #686868; }
+.card--gnat .card-link:hover { background: #505050; }
 .card--redgnat  { --accent: #d91d14; }
 .card--sandgnat { --accent: #da7e20; }
 .card--sensegnat{ --accent: #8a3aa4; }
