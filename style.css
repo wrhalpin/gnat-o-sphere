@@ -105,7 +105,7 @@ a { color: var(--brand); }
 /* ── Cards ── */
 
 /* Per-product accent colors */
-.card--gnat     { --accent: #b51a10; }
+.card--gnat     { --accent: #ffffff; }
 .card--redgnat  { --accent: #d91d14; }
 .card--sandgnat { --accent: #da7e20; }
 .card--sensegnat{ --accent: #8a3aa4; }
