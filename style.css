@@ -87,8 +87,12 @@ a { color: var(--brand); }
 
 .ecosystem {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .ecosystem { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 680px) {
@@ -100,17 +104,22 @@ a { color: var(--brand); }
 
 /* ── Cards ── */
 
+/* Per-product accent colors */
+.card--gnat     { --accent: #b51a10; }
+.card--redgnat  { --accent: #d91d14; }
+.card--sandgnat { --accent: #da7e20; }
+.card--sensegnat{ --accent: #8a3aa4; }
+
 .card {
   background: var(--surface-2);
-  border: 1px solid var(--line);
+  border: 1px solid var(--accent, var(--line));
   border-radius: var(--radius);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
 }
 
-.card.primary {
-  border-color: var(--brand);
+.card--gnat {
   border-width: 2px;
 }
 
@@ -126,7 +135,7 @@ a { color: var(--brand); }
 .card h2 {
   margin: 0 0 .2rem;
   font-size: 1.4rem;
-  color: var(--brand);
+  color: var(--accent, var(--brand));
 }
 
 .card h2 a {
@@ -155,7 +164,7 @@ a { color: var(--brand); }
   display: inline-block;
   margin-top: 1.25rem;
   padding: .4rem .9rem;
-  background: var(--brand);
+  background: var(--accent, var(--brand));
   color: #fff;
   text-decoration: none;
   border-radius: 8px;
@@ -165,7 +174,7 @@ a { color: var(--brand); }
 }
 
 .card-link:hover {
-  background: var(--brand-dark);
+  opacity: .85;
   color: #fff;
 }
 
