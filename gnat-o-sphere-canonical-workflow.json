@@ -1,0 +1,205 @@
+{
+  "id": "gnat_o_sphere_canonical_workflow",
+  "name": "GNAT-o-Sphere Canonical Workflow",
+  "viewport": {
+    "x": 0,
+    "y": 0,
+    "zoom": 1
+  },
+  "nodes": [
+    {
+      "id": "n1",
+      "type": "rect",
+      "x": 80,
+      "y": 40,
+      "width": 220,
+      "height": 70,
+      "data": {
+        "label": "External Telemetry & Sources"
+      }
+    },
+    {
+      "id": "n2",
+      "type": "rect",
+      "x": 80,
+      "y": 170,
+      "width": 220,
+      "height": 70,
+      "data": {
+        "label": "GNAT Ingestion & Connectors"
+      }
+    },
+    {
+      "id": "n3",
+      "type": "rect",
+      "x": 80,
+      "y": 300,
+      "width": 220,
+      "height": 70,
+      "data": {
+        "label": "Kafka Telemetry Plane\n(gnat.telemetry)"
+      }
+    },
+    {
+      "id": "n4",
+      "type": "rect",
+      "x": 420,
+      "y": 300,
+      "width": 280,
+      "height": 90,
+      "data": {
+        "label": "SenseGNAT\nBehavioral Profiling & Anomaly Detection"
+      }
+    },
+    {
+      "id": "n5",
+      "type": "rect",
+      "x": 80,
+      "y": 450,
+      "width": 260,
+      "height": 80,
+      "data": {
+        "label": "GNAT STIX Conversion & Correlation"
+      }
+    },
+    {
+      "id": "n6",
+      "type": "rect",
+      "x": 420,
+      "y": 450,
+      "width": 280,
+      "height": 90,
+      "data": {
+        "label": "SandGNAT\nDetonation & Artifact Enrichment"
+      }
+    },
+    {
+      "id": "n7",
+      "type": "rect",
+      "x": 760,
+      "y": 450,
+      "width": 280,
+      "height": 90,
+      "data": {
+        "label": "RedGNAT\nAdversary Emulation & Validation"
+      }
+    },
+    {
+      "id": "n8",
+      "type": "rect",
+      "x": 420,
+      "y": 610,
+      "width": 280,
+      "height": 80,
+      "data": {
+        "label": "Unified Investigation Graph"
+      }
+    },
+    {
+      "id": "n9",
+      "type": "rect",
+      "x": 420,
+      "y": 760,
+      "width": 220,
+      "height": 70,
+      "data": {
+        "label": "Reporting, Export,\nOperator Action"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "n1",
+      "target": "n2",
+      "data": {
+        "label": "ingest"
+      }
+    },
+    {
+      "id": "e2",
+      "source": "n2",
+      "target": "n3",
+      "data": {
+        "label": "route telemetry"
+      }
+    },
+    {
+      "id": "e3",
+      "source": "n3",
+      "target": "n4",
+      "data": {
+        "label": "consume raw flow data"
+      }
+    },
+    {
+      "id": "e4",
+      "source": "n2",
+      "target": "n5",
+      "data": {
+        "label": "normalize / convert"
+      }
+    },
+    {
+      "id": "e5",
+      "source": "n4",
+      "target": "n5",
+      "data": {
+        "label": "publish findings"
+      }
+    },
+    {
+      "id": "e6",
+      "source": "n5",
+      "target": "n6",
+      "data": {
+        "label": "submit suspicious artifacts"
+      }
+    },
+    {
+      "id": "e7",
+      "source": "n5",
+      "target": "n7",
+      "data": {
+        "label": "trigger validation"
+      }
+    },
+    {
+      "id": "e8",
+      "source": "n6",
+      "target": "n8",
+      "data": {
+        "label": "detonation findings"
+      }
+    },
+    {
+      "id": "e9",
+      "source": "n7",
+      "target": "n8",
+      "data": {
+        "label": "validation results"
+      }
+    },
+    {
+      "id": "e10",
+      "source": "n5",
+      "target": "n8",
+      "data": {
+        "label": "intel & evidence"
+      }
+    },
+    {
+      "id": "e11",
+      "source": "n8",
+      "target": "n9",
+      "data": {
+        "label": "case output"
+      }
+    }
+  ],
+  "meta": {
+    "description": "Top-to-bottom, left-to-right workflow for GNAT, SenseGNAT, SandGNAT, and RedGNAT.",
+    "createdAt": 1776859200000,
+    "updatedAt": 1776859200000
+  }
+}
