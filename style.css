@@ -180,6 +180,20 @@ a { color: var(--brand); }
   color: #fff;
 }
 
+/* ── Workflow diagram ── */
+
+.flow-wrap {
+  overflow-x: auto;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.flow-wrap .mermaid {
+  min-width: 560px;
+}
+
 /* ── Divider ── */
 
 hr {
