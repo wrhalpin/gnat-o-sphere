@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GNAT-o-sphere — Ecosystem Overview</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <link rel="stylesheet" href="gnat-theme.css">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+
+<!-- ═══════════════════════════════════════════════════════
+     01  TITLE
+     ═══════════════════════════════════════════════════════ -->
+<section class="slide-title" data-background-color="#0f0f11">
+  <img class="title-logo" src="../images/gnat-o-sphere-256.png" alt="GNAT-o-sphere">
+  <h1>GNAT-o-sphere</h1>
+  <p class="title-sub">An Ecosystem of Tools. One Mission.</p>
+  <p class="title-tagline">Cyber Threat Intel Made Simple</p>
+  <aside class="notes">
+    Welcome. This session is the ecosystem overview — what GNAT-o-sphere is, why it exists, how the tools connect, and where each role in this room benefits. We'll cover the whole ecosystem end-to-end, then individual tool sessions go deeper on each one.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     02  THE PROBLEM
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">The Problem</span>
+  <h2>Security teams keep rebuilding the same things</h2>
+  <span class="accent-rule"></span>
+  <ul class="spaced">
+    <li>New vendor → new integration to write from scratch</li>
+    <li>New tool → new data model to normalize against</li>
+    <li>New workflow → starts from zero every time</li>
+    <li>Every API change upstream breaks something downstream</li>
+    <li>The actual analysis gets buried under integration work</li>
+  </ul>
+  <aside class="notes">
+    This is the core observation. Security teams aren't short on tools — they're short on connective tissue. Every vendor relationship adds a maintenance burden. The threat landscape doesn't pause while you fix your plumbing. This is the problem space GNAT-o-sphere is designed to close.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     03  THE COST
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">The Cost</span>
+  <h2>Integration work isn't analysis</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li>Analyst hours spent on plumbing, not investigation</li>
+      <li>Brittle toolchains that break when APIs change</li>
+      <li>Workflows that can't survive a vendor switch</li>
+    </ul>
+    <ul class="spaced">
+      <li>Intelligence siloed inside individual platforms</li>
+      <li>Reports rebuilt manually each cycle</li>
+      <li>Onboarding new tools resets your workflow investment</li>
+    </ul>
+  </div>
+  <div class="callout">
+    The problem isn't capability — it's the recurring cost of keeping everything wired together.
+  </div>
+  <aside class="notes">
+    For analysts and investigators: this is time that should go toward understanding threats. For engineers: this is the maintenance burden that makes every tool evaluation painful. For managers: this is the hidden cost that doesn't show up in licensing but absolutely shows up in team capacity.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     04  THE MODEL
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">A Better Model</span>
+  <h2>Standardize the surface.<br>Liberate the workflow.</h2>
+  <span class="accent-rule"></span>
+  <ul class="spaced">
+    <li><strong>One integration framework</strong> — 159 connectors behind a single operating model</li>
+    <li><strong>One data standard</strong> — STIX 2.1 as the stable contract between every tool and workflow</li>
+    <li><strong>One investigation platform</strong> — your work travels with you regardless of what changes upstream</li>
+  </ul>
+  <aside class="notes">
+    This is the philosophical bet GNAT-o-sphere makes: if you standardize the integration layer and use a stable, vendor-neutral data format, the rest of your workflow becomes durable. Tools can change. Vendors can change. Your investigations and workflows shouldn't have to.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     05  THE ECOSYSTEM
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">The GNAT-o-sphere</span>
+  <h2>Four tools. One connected platform.</h2>
+  <span class="accent-rule"></span>
+  <div class="cols-3" style="grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 0.75rem;">
+    <div class="box box--gnat">
+      <h3>GNAT</h3>
+      <p>Core platform. Investigation hub. Connector framework. STIX-native.</p>
+    </div>
+    <div class="box box--sense">
+      <h3>SenseGNAT</h3>
+      <p>Network profiling &amp; behavioral anomaly detection.</p>
+    </div>
+    <div class="box box--sand">
+      <h3>SandGNAT</h3>
+      <p>Automated malware detonation &amp; artifact enrichment.</p>
+    </div>
+    <div class="box box--red">
+      <h3>RedGNAT</h3>
+      <p>Controlled adversary emulation &amp; detection validation.</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 1rem;">
+    Each tool adds value independently. Together they close the full path from signal to validated, portable intelligence.
+  </div>
+  <aside class="notes">
+    GNAT is the hub — everything flows through it. The three addons extend its reach into specific analysis domains. You can adopt them incrementally; each one adds value on its own, and the value compounds as you add more.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     06  GNAT CORE
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Core Platform</span>
+  <h2 style="color: #ffffff;">GNAT — GNAT's Not A TIP</h2>
+  <span class="accent-rule"></span>
+  <div class="cols-wide">
+    <ul class="spaced">
+      <li><strong>159 connectors</strong> — ingest from feeds, platforms, and APIs without custom code for each</li>
+      <li><strong>STIX 2.1 native</strong> — every object, relationship, and finding expressed in a vendor-neutral standard</li>
+      <li><strong>Investigation workflows</strong> — build repeatable paths from indicators to evidence to reports</li>
+      <li><strong>Addon routing</strong> — direct artifacts and telemetry to SenseGNAT, SandGNAT, or RedGNAT</li>
+      <li><strong>Portable output</strong> — export structured bundles, reports, and findings that travel independently of GNAT</li>
+    </ul>
+    <div class="box box--gnat">
+      <h3>Not a TIP</h3>
+      <p>GNAT is an investigation and workflow platform built around a connector surface and a structured data contract — not a threat intelligence platform in the traditional sense. It's designed to reduce integration churn, not add to it.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Emphasize the "Not A TIP" positioning for the technical managers in the room — GNAT doesn't try to replace existing TIPs. It wraps them. If you have a TIP, GNAT connects to it. The value is in the connective tissue and the STIX-native workflow layer, not in replacing what you already have.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     07  ADDONS OVERVIEW
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">The Addons</span>
+  <h2>Extend the platform where you need it</h2>
+  <span class="accent-rule"></span>
+  <div class="cols-3">
+    <div class="box box--sense">
+      <h3>SenseGNAT</h3>
+      <p>Network &amp; behavioral layer</p>
+      <ul>
+        <li>Consumes Kafka telemetry stream</li>
+        <li>Anomaly detection &amp; profiling</li>
+        <li>Runs before STIX conversion</li>
+      </ul>
+    </div>
+    <div class="box box--sand">
+      <h3>SandGNAT</h3>
+      <p>Malware analysis layer</p>
+      <ul>
+        <li>Automated detonation</li>
+        <li>Static + dynamic analysis</li>
+        <li>CAPA, YARA findings</li>
+      </ul>
+    </div>
+    <div class="box box--red">
+      <h3>RedGNAT</h3>
+      <p>Validation layer</p>
+      <ul>
+        <li>Controlled adversary emulation</li>
+        <li>Explicit safety boundaries</li>
+        <li>Detection coverage testing</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    Three distinct analysis domains. A team with only network visibility starts with SenseGNAT. A team doing malware analysis starts with SandGNAT. A team focused on validating detections starts with RedGNAT. All three feed findings back into GNAT's investigation graph.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     08  SENSEGNAT
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker" style="color: #8a3aa4;">Addon — Network Intelligence</span>
+  <h2 style="color: #8a3aa4;">SenseGNAT</h2>
+  <p style="color: #c8cad2; font-size: 0.7em; margin-bottom: 0.5rem;">Behavioral profiling &amp; anomaly detection on network telemetry</p>
+  <span class="accent-rule" style="background: #8a3aa4;"></span>
+  <div class="cols">
+    <div>
+      <h3>Why it exists</h3>
+      <ul class="spaced">
+        <li>Indicators alone miss behavioral threats</li>
+        <li>STIX conversion strips flow-level detail that behavioral models need</li>
+        <li>SenseGNAT runs <strong>before</strong> that conversion on the raw Kafka stream</li>
+      </ul>
+    </div>
+    <div>
+      <h3>What it outputs</h3>
+      <ul class="spaced">
+        <li>Anomaly findings with confidence scores</li>
+        <li>Behavioral narratives</li>
+        <li>Normalized detection outputs for GNAT</li>
+        <li>Enriched context for investigations</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    The key technical insight here for engineers: SenseGNAT taps the gnat.telemetry Kafka topic before GNAT normalizes records to STIX. At that point you still have raw fields — source/dest IP, ports, byte counts, session context. That's the data behavioral models need. Once it's STIX, those fields may be abstracted away.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     09  SANDGNAT
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker" style="color: #da7e20;">Addon — Malware Analysis</span>
+  <h2 style="color: #da7e20;">SandGNAT</h2>
+  <p style="color: #c8cad2; font-size: 0.7em; margin-bottom: 0.5rem;">Automated malware detonation &amp; artifact enrichment</p>
+  <span class="accent-rule" style="background: #da7e20;"></span>
+  <div class="cols">
+    <div>
+      <h3>What it does</h3>
+      <ul class="spaced">
+        <li>Detonates suspicious files, URLs, and derived artifacts</li>
+        <li>Runs static and dynamic analysis</li>
+        <li>Applies CAPA and YARA rule sets</li>
+        <li>Feeds findings directly into GNAT investigations</li>
+      </ul>
+    </div>
+    <div>
+      <h3>What it outputs</h3>
+      <ul class="spaced">
+        <li>Extracted indicators from detonation</li>
+        <li>Static &amp; dynamic behavioral observations</li>
+        <li>CAPA / YARA-derived findings</li>
+        <li>Artifact bundles for investigation evidence</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    For analysts and investigators: SandGNAT closes the gap between "I have a suspicious file" and "I have structured findings in my investigation." The detonation workflow is triggered from within GNAT and results flow back automatically. No manual artifact handling between tools.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     10  REDGNAT
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker" style="color: #d91d14;">Addon — Detection Validation</span>
+  <h2 style="color: #d91d14;">RedGNAT</h2>
+  <p style="color: #c8cad2; font-size: 0.7em; margin-bottom: 0.5rem;">Collaborative Adversarial Readiness Testing with explicit safety boundaries</p>
+  <span class="accent-rule" style="background: #d91d14;"></span>
+  <div class="cols">
+    <div>
+      <h3>What it does</h3>
+      <ul class="spaced">
+        <li>Controlled adversary emulation against real TTPs</li>
+        <li>Explicit safety boundaries — no runaway execution</li>
+        <li>Tests detection coverage and response capability</li>
+        <li>Designed to run collaboratively, not covertly</li>
+      </ul>
+    </div>
+    <div>
+      <h3>What it outputs</h3>
+      <ul class="spaced">
+        <li>Detection coverage gaps</li>
+        <li>Validation results by technique</li>
+        <li>Structured notes for investigation follow-up</li>
+        <li>Evidence for reporting and remediation tracking</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    The "explicit safety boundaries" point matters for managers: RedGNAT is not a red team framework in the traditional sense. It's a CART tool — designed to be used with explicit authorization, defined scope, and controlled execution. The goal is improving defensive posture, not simulating an adversary with no guardrails.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     11  THE CANONICAL WORKFLOW
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">How It Fits Together</span>
+  <h2>The Canonical Workflow</h2>
+  <span class="accent-rule"></span>
+  <div class="flow-row">
+
+    <div class="flow-col">
+      <div class="flow-node">
+        <span class="fn-step">01 — Collect</span>
+        <strong>Telemetry &amp; Sources</strong>
+        <span>External indicators and raw network telemetry enter the ecosystem</span>
+      </div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="flow-col">
+      <div class="flow-node flow-node--gnat">
+        <span class="fn-step">02 — Process</span>
+        <strong>GNAT</strong>
+        <span>Ingest, normalize, convert to STIX, route to addons</span>
+      </div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="flow-col flow-col--wide">
+      <div class="flow-node flow-node--sense">
+        <strong>SenseGNAT</strong>
+        <span>Behavioral profiling on raw telemetry</span>
+      </div>
+      <div class="flow-node flow-node--sand">
+        <strong>SandGNAT</strong>
+        <span>Malware detonation &amp; enrichment</span>
+      </div>
+      <div class="flow-node flow-node--red">
+        <strong>RedGNAT</strong>
+        <span>Adversary emulation &amp; validation</span>
+      </div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="flow-col">
+      <div class="flow-node">
+        <span class="fn-step">04 — Report</span>
+        <strong>Investigate &amp; Act</strong>
+        <span>Unified investigation graph, reporting, operator action</span>
+      </div>
+    </div>
+
+  </div>
+  <aside class="notes">
+    Walk through the flow left to right. Telemetry and sources come in, GNAT ingests and routes them. SenseGNAT gets the raw telemetry before normalization. SandGNAT gets suspicious artifacts. RedGNAT validates detection coverage. All findings converge in the GNAT investigation graph and flow out as structured reports.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     12  STIX 2.1
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">The Contract</span>
+  <h2>STIX 2.1 — Why It Matters</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li><strong>Industry standard</strong> — structured, vendor-neutral threat intelligence format</li>
+      <li><strong>Stable contract</strong> — your downstream workflows don't break when upstream tools change</li>
+      <li><strong>Portable intelligence</strong> — investigations and reports travel independently of any platform</li>
+      <li><strong>Reproducible</strong> — the same indicators and relationships produce the same structured output</li>
+    </ul>
+    <div>
+      <div class="box" style="margin-bottom: 0.75rem;">
+        <h3>What it prevents</h3>
+        <p>Rebuilding report templates, re-normalizing data, and re-wiring workflows every time a vendor changes their API or data model.</p>
+      </div>
+      <div class="box">
+        <h3>What it enables</h3>
+        <p>Sharing investigation context across teams, tools, and organizations without translation layers.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    For engineers: STIX is the reason you can swap out an upstream connector without rebuilding your entire downstream workflow. For analysts: it's why your investigation export from GNAT can be read by your partner organization's platform without custom integration work.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     13  FOR ANALYSTS
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="role-tag">Analysts</span>
+  <h2>Correlate broadly. Keep your work portable.</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li>Ingest from 159 sources without managing individual connectors</li>
+      <li>Correlate indicators, behavioral findings, and detonation results in one investigation</li>
+      <li>STIX-native output means reports survive tool changes</li>
+      <li>SenseGNAT surfaces behavioral anomalies you'd miss with indicators alone</li>
+    </ul>
+    <div class="box" style="margin-top: 0.25rem;">
+      <h3>The shift</h3>
+      <p>From: spending cycles normalizing feeds and rebuilding report templates<br><br>To: spending cycles on the actual analysis — with all sources and findings already connected</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Speak directly to the analysts in the room. The value proposition here is time — specifically, giving it back. If you currently spend 30% of your investigation time on data wrangling and report assembly, GNAT's goal is to reclaim most of that for actual analysis work.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     14  FOR INVESTIGATORS
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="role-tag">Investigators</span>
+  <h2>A repeatable path from signal to report.</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li>Start from any seed indicator — IP, hash, domain, artifact</li>
+      <li>Investigation graph links indicators, observations, and findings automatically</li>
+      <li>SandGNAT detonates suspicious artifacts mid-investigation without leaving the workflow</li>
+      <li>Structured export: STIX bundles, operator reports, case notes</li>
+      <li>The same workflow runs the same way every time — reproducibility by design</li>
+    </ul>
+    <div class="box">
+      <h3>The result</h3>
+      <p>Investigations that don't rely on a specific analyst knowing the right steps — because the steps are encoded in the workflow, not in someone's head.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    The reproducibility angle is especially important for teams where institutional knowledge is a risk. If your senior investigator leaves, their workflows shouldn't leave with them. GNAT's investigation model is designed to make the process explicit and repeatable.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     15  FOR ENGINEERS
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="role-tag">Engineers</span>
+  <h2>One integration surface. Durable workflows.</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li>159 connectors behind one operating model — no custom connector per source</li>
+      <li>API changes upstream don't cascade to your investigation workflows</li>
+      <li>STIX as the stable downstream contract between tools</li>
+      <li>Addon architecture: add SenseGNAT, SandGNAT, RedGNAT independently</li>
+      <li>Apache 2.0 — no licensing risk, full source access</li>
+    </ul>
+    <div class="box">
+      <h3>The maintenance difference</h3>
+      <p>Instead of maintaining N connectors and N data model mappings, you maintain one integration surface. Vendor churn becomes a connector update, not a workflow rebuild.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Engineers care about maintenance surface area. Be concrete: if you're currently maintaining bespoke integrations with 10 different data sources, each with their own auth model, rate limits, and data format — that's N things to break and N things to fix. GNAT's connector framework collapses that to one.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     16  ADOPTION PATH
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Getting Started</span>
+  <h2>Start small. Expand where it matters.</h2>
+  <span class="accent-rule"></span>
+  <ol class="step-list spaced">
+    <li><strong>Deploy GNAT Core</strong> — connect your existing sources, build your first investigation workflow</li>
+    <li><strong>Validate the connector surface</strong> — confirm your key feeds and platforms are covered, add any missing connectors</li>
+    <li><strong>Add SenseGNAT</strong> — if you have network telemetry, extend behavioral visibility before it's normalized away</li>
+    <li><strong>Add SandGNAT</strong> — bring malware and artifact analysis directly into investigation workflows</li>
+    <li><strong>Add RedGNAT</strong> — validate detection coverage and close the loop from investigation to readiness</li>
+  </ol>
+  <div class="callout">
+    Each step delivers value independently. You don't need the full ecosystem on day one — but the full ecosystem is available when you're ready.
+  </div>
+  <aside class="notes">
+    Resist the urge to present this as "deploy everything at once." The modular adoption story is one of GNAT-o-sphere's real strengths. Start with GNAT Core and one source that matters to your team. Get a workflow running. Then expand. The full ecosystem value emerges gradually, which also means the adoption risk is low.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     17  RESOURCES / CTA
+     ═══════════════════════════════════════════════════════ -->
+<section class="slide-title" data-background-color="#0f0f11">
+  <img class="title-logo" src="../images/gnat-o-sphere-256.png" alt="GNAT-o-sphere">
+  <h2 style="margin-bottom: 0.5rem;">Start here</h2>
+  <div class="cta-grid" style="width: 100%; max-width: 900px;">
+    <div class="cta-item">
+      <span class="label">Ecosystem hub</span>
+      <a href="https://wrhalpin.github.io/gnat-o-sphere/">wrhalpin.github.io/gnat-o-sphere</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">GNAT Core docs</span>
+      <a href="https://wrhalpin.github.io/GNAT/">wrhalpin.github.io/GNAT</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Canonical workflow</span>
+      <a href="https://wrhalpin.github.io/gnat-o-sphere/workflow.html">wrhalpin.github.io/gnat-o-sphere/workflow.html</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">GitHub — Apache 2.0</span>
+      <a href="https://github.com/wrhalpin">github.com/wrhalpin</a>
+    </div>
+  </div>
+  <aside class="notes">
+    Leave time for questions here. The individual tool sessions will go deep on each platform. If the room wants to continue on a specific tool today, the SandGNAT, SenseGNAT, and RedGNAT decks are available. Otherwise, point people to the ecosystem hub and let them self-direct.
+  </aside>
+</section>
+
+
+</div><!-- /.slides -->
+</div><!-- /.reveal -->
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash:                  true,
+    slideNumber:           'c/t',
+    transition:            'fade',
+    backgroundTransition:  'fade',
+    width:                 1280,
+    height:                720,
+    margin:                0.06,
+    controls:              true,
+    controlsTutorial:      false,
+    progress:              true,
+    center:                false,
+    showNotes:             false,
+  });
+</script>
+</body>
+</html>

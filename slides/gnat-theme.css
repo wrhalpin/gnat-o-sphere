@@ -1,0 +1,375 @@
+/* ============================================================
+   GNAT-o-sphere — Reveal.js Theme
+   ============================================================ */
+
+.reveal {
+  --r-background-color:           #0f0f11;
+  --r-main-font:                  Inter, Arial, sans-serif;
+  --r-main-font-size:             32px;
+  --r-main-color:                 #c8cad2;
+  --r-block-margin:               0.75rem;
+  --r-heading-margin:             0 0 0.6rem 0;
+  --r-heading-font:               Inter, Arial, sans-serif;
+  --r-heading-color:              #ffffff;
+  --r-heading-line-height:        1.15;
+  --r-heading-letter-spacing:     -0.02em;
+  --r-heading-text-transform:     none;
+  --r-heading-text-shadow:        none;
+  --r-heading-font-weight:        800;
+  --r-heading1-size:              2.2em;
+  --r-heading2-size:              1.5em;
+  --r-heading3-size:              1.1em;
+  --r-heading4-size:              0.9em;
+  --r-code-font:                  'Courier New', monospace;
+  --r-link-color:                 #d42c1e;
+  --r-link-color-hover:           #b01e13;
+  --r-selection-background-color: #d42c1e;
+  --r-selection-color:            #fff;
+
+  /* brand tokens */
+  --brand:      #d42c1e;
+  --brand-dark: #b01e13;
+  --surface:    #1a1a1e;
+  --line:       #2a2a34;
+  --muted:      #8a8a9a;
+  --dim:        #5a5a6a;
+
+  /* product accents */
+  --gnat:    #ffffff;
+  --sense:   #8a3aa4;
+  --sand:    #da7e20;
+  --red:     #d91d14;
+}
+
+body { background: #0f0f11; }
+
+/* ── Base layout ── */
+
+.reveal .slides { text-align: left; }
+
+.reveal .slides section {
+  box-sizing: border-box;
+  height: 100%;
+}
+
+/* ── Typography ── */
+
+.reveal h1,
+.reveal h2 { font-weight: 800; }
+.reveal h3  { font-weight: 700; color: var(--r-main-color); }
+
+.reveal p   { margin: 0 0 0.5em; }
+
+.reveal strong { color: #fff; font-weight: 600; }
+
+.reveal code {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  font-size: 0.85em;
+  color: #edeef2;
+}
+
+/* ── Lists ── */
+
+.reveal ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.5em 0 0;
+}
+
+.reveal ul li {
+  position: relative;
+  padding-left: 1.2em;
+  margin-bottom: 0.45em;
+  line-height: 1.4;
+}
+
+.reveal ul li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--brand);
+  font-weight: 700;
+}
+
+.reveal ul.spaced li { margin-bottom: 0.65em; }
+
+/* ── Kicker ── */
+
+.reveal .kicker {
+  display: block;
+  font-size: 0.4em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 0.4em;
+}
+
+.reveal .accent-rule {
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  background: var(--brand);
+  border-radius: 2px;
+  margin: 0.6rem 0 0.9rem;
+}
+
+/* ── Title slide ── */
+
+.reveal section.slide-title {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.reveal .title-logo {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  border-radius: 14px;
+  margin-bottom: 1rem;
+}
+
+.reveal .title-sub {
+  font-size: 0.6em;
+  color: var(--muted);
+  margin: 0.25em 0 0;
+  font-weight: 400;
+}
+
+.reveal .title-tagline {
+  font-size: 0.45em;
+  color: var(--dim);
+  margin: 0.15em 0 0;
+  font-weight: 400;
+}
+
+/* ── Section divider slide ── */
+
+.reveal section.slide-divider {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.reveal section.slide-divider h2 {
+  font-size: 2em;
+}
+
+/* ── Two / three column layouts ── */
+
+.reveal .cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  margin-top: 0.75rem;
+}
+
+.reveal .cols-3 {
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.reveal .cols-wide {
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.5rem;
+  margin-top: 0.75rem;
+}
+
+/* ── Box / card ── */
+
+.reveal .box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+}
+
+.reveal .box h3 {
+  font-size: 0.7em;
+  margin: 0 0 0.3em;
+}
+
+.reveal .box p,
+.reveal .box ul {
+  font-size: 0.55em;
+  color: var(--muted);
+  margin: 0;
+}
+
+.reveal .box ul { margin-top: 0.3em; }
+
+.reveal .box--gnat  { border-color: var(--gnat);  }
+.reveal .box--gnat  h3 { color: var(--gnat); }
+.reveal .box--sense { border-color: var(--sense); }
+.reveal .box--sense h3 { color: var(--sense); }
+.reveal .box--sand  { border-color: var(--sand);  }
+.reveal .box--sand  h3 { color: var(--sand); }
+.reveal .box--red   { border-color: var(--red);   }
+.reveal .box--red   h3 { color: var(--red); }
+
+/* ── Callout ── */
+
+.reveal .callout {
+  background: var(--surface);
+  border-left: 3px solid var(--brand);
+  border-radius: 0 8px 8px 0;
+  padding: 0.7rem 1rem;
+  margin-top: 0.75rem;
+  font-size: 0.6em;
+  color: #edeef2;
+}
+
+/* ── Role tag ── */
+
+.reveal .role-tag {
+  display: inline-block;
+  background: var(--brand);
+  color: #fff;
+  font-size: 0.38em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.25em 0.7em;
+  border-radius: 4px;
+  margin-bottom: 0.5em;
+  vertical-align: middle;
+}
+
+/* ── Workflow flow teaser ── */
+
+.reveal .flow-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.reveal .flow-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.reveal .flow-col--wide { flex: 1.25; }
+
+.reveal .flow-node {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 0.55rem 0.75rem;
+  flex: 1;
+}
+
+.reveal .flow-node .fn-step {
+  display: block;
+  font-size: 0.35em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 0.25em;
+}
+
+.reveal .flow-node strong {
+  display: block;
+  font-size: 0.5em;
+  font-weight: 700;
+  margin-bottom: 0.2em;
+}
+
+.reveal .flow-node span {
+  display: block;
+  font-size: 0.38em;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.reveal .flow-node--gnat  { border-color: var(--gnat); }
+.reveal .flow-node--gnat  strong { color: var(--gnat); }
+.reveal .flow-node--sense { border-color: var(--sense); }
+.reveal .flow-node--sense strong { color: var(--sense); }
+.reveal .flow-node--sand  { border-color: var(--sand); }
+.reveal .flow-node--sand  strong { color: var(--sand); }
+.reveal .flow-node--red   { border-color: var(--red); }
+.reveal .flow-node--red   strong { color: var(--red); }
+
+.reveal .flow-arrow {
+  display: flex;
+  align-items: center;
+  color: var(--dim);
+  font-size: 0.85em;
+  flex-shrink: 0;
+}
+
+/* ── Step list ── */
+
+.reveal ol.step-list {
+  list-style: none;
+  padding: 0;
+  counter-reset: steps;
+  margin-top: 0.5em;
+}
+
+.reveal ol.step-list li {
+  counter-increment: steps;
+  padding-left: 1.6em;
+  margin-bottom: 0.55em;
+  position: relative;
+  line-height: 1.4;
+}
+
+.reveal ol.step-list li::before {
+  content: counter(steps);
+  position: absolute;
+  left: 0;
+  color: var(--brand);
+  font-weight: 800;
+  font-size: 0.9em;
+}
+
+/* ── CTA grid ── */
+
+.reveal .cta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+  margin-top: 0.75rem;
+}
+
+.reveal .cta-item {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 0.75rem 1rem;
+}
+
+.reveal .cta-item .label {
+  display: block;
+  font-size: 0.36em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 0.4em;
+}
+
+.reveal .cta-item a {
+  font-size: 0.5em;
+  color: var(--brand);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+/* ── Reveal.js chrome ── */
+
+.reveal .progress { height: 3px; color: var(--brand); }
+.reveal .progress span { background: var(--brand); }
+.reveal .controls { color: var(--brand); }
+.reveal .slide-number { background: transparent; color: var(--dim); font-size: 0.75rem; }
