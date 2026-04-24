@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RedGNAT — Continuous Automated Readiness Testing</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <link rel="stylesheet" href="gnat-theme.css">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+
+<!-- ═══════════════════════════════════════════════════════
+     01  TITLE
+     ═══════════════════════════════════════════════════════ -->
+<section class="slide-title" data-background-color="#0f0f11">
+  <img class="title-logo" src="../images/gnat-o-sphere-256.png" alt="GNAT-o-sphere">
+  <h1 style="color: #d91d14;">RedGNAT</h1>
+  <p class="title-sub">Continuous Automated Readiness Testing</p>
+  <p class="title-tagline">Validate detections. Confirm coverage. Automate adversary emulation safely.</p>
+  <aside class="notes">
+    RedGNAT deep dive. Audience: detection engineers, red team operators, security architects, and managers scoping a continuous validation capability. We'll cover CART, the safety boundary model, GNAT integration, and what changes when validation is continuous rather than periodic.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     02  THE PROBLEM
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">The Problem</span>
+  <h2>You assume your detections work. You rarely verify.</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li>Detection rules are written and never tested against real adversary behavior</li>
+      <li>Red team exercises happen once a year — your environment changes weekly</li>
+      <li>A rule that was working last quarter may be broken after a SIEM update, a log source change, or a tuning tweak</li>
+      <li>Threat intel identifies adversary TTPs — but confirms nothing about your ability to detect them</li>
+    </ul>
+    <div class="box box--red">
+      <h3>The readiness gap</h3>
+      <p>Point-in-time testing gives you a readiness snapshot. Continuous testing gives you a readiness state. These are fundamentally different.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    This lands differently for different audiences. For detection engineers: this is about catching regression before an adversary does. For managers: this is about the gap between "we have a detection" and "we know the detection fires." Those are very different statements.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     03  CART — CONTINUOUS AUTOMATED READINESS TESTING
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">The Model</span>
+  <h2>CART — Continuous Automated Readiness Testing</h2>
+  <span class="accent-rule"></span>
+  <ul class="spaced">
+    <li><strong>Continuous</strong> — validation runs on a schedule, not on a calendar. Your readiness state is always current.</li>
+    <li><strong>Automated</strong> — emulation runs are defined once, executed by the platform. No manual red team engagement required per run.</li>
+    <li><strong>Readiness</strong> — the output is a readiness state: which techniques fire which detections, which have gaps, which regressed.</li>
+    <li><strong>Bounded</strong> — explicit safety boundaries prevent unintended impact. Emulation is controlled, scoped, and auditable.</li>
+  </ul>
+  <aside class="notes">
+    CART is the philosophy that connects the four words. Unpack each one. "Continuous" is the most important shift from traditional red team. You're not doing a big annual exercise — you're running a steady validation loop. The environment is always under test, safely.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     04  SAFETY BOUNDARIES
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Safety Model</span>
+  <h2>Controlled emulation. Explicit boundaries.</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li><strong>Scoped targets</strong> — emulation runs against declared targets only. No lateral movement beyond the defined scope.</li>
+      <li><strong>Technique allowlist</strong> — each run declares exactly which ATT&amp;CK techniques will be executed. Nothing outside the list.</li>
+      <li><strong>No live payloads</strong> — emulation tests detection coverage without deploying real malicious capability</li>
+      <li><strong>Full audit trail</strong> — every action is logged, timestamped, and tied to the originating run</li>
+      <li><strong>Integration with change management</strong> — runs can be gated behind approval workflows before execution</li>
+    </ul>
+    <div class="box box--red">
+      <h3>Automation without chaos</h3>
+      <p>The safety boundary model is what makes CART viable for continuous use. The emulation is aggressive enough to test real detection capability, and contained enough to run without a red team standing by.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    The safety model is the thing that will get the most scrutiny from security architects and managers. Go through each bullet explicitly. The "no live payloads" point is critical — RedGNAT tests whether your detection would fire, not by executing real malware, but by simulating the behavior that the detection rule is designed to catch.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     05  ARCHITECTURE
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Architecture</span>
+  <h2>Triggered by GNAT. Results back to GNAT.</h2>
+  <span class="accent-rule"></span>
+  <div class="flow-row">
+    <div class="flow-col">
+      <div class="flow-node flow-node--gnat">
+        <span class="fn-step">Trigger</span>
+        <strong>GNAT Workflow Engine</strong>
+        <span>Triggered by new TTP intel, scheduled validation, or analyst request</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-col">
+      <div class="flow-node flow-node--red">
+        <span class="fn-step">Execution</span>
+        <strong>RedGNAT</strong>
+        <span>Emulates adversary techniques against defined targets within safety boundaries</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-col">
+      <div class="flow-node flow-node--gnat">
+        <span class="fn-step">Results</span>
+        <strong>Investigation Graph</strong>
+        <span>Validation outcomes published as STIX — detected, missed, partial, error</span>
+      </div>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 1rem;">
+    Trigger modes: scheduled (e.g., nightly), event-driven (new TTP intel in a GNAT investigation), or on-demand (analyst triggers a validation run from the graph).
+  </div>
+  <aside class="notes">
+    The event-driven trigger is the most interesting integration point. When GNAT ingests new TTP intel — say, a new campaign report maps to a set of ATT&amp;CK techniques — it can automatically trigger a RedGNAT validation run for those specific techniques. Your readiness state updates in response to new intelligence automatically.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     06  WHAT REDGNAT VALIDATES
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Validation Surface</span>
+  <h2>From detection rules to full kill chain coverage</h2>
+  <span class="accent-rule"></span>
+  <div class="cols-3">
+    <div class="box box--red">
+      <h3>Detection Rules</h3>
+      <p>Does a specific SIEM rule, EDR detection, or network signature fire when the technique is executed?</p>
+    </div>
+    <div class="box box--red">
+      <h3>Alert Fidelity</h3>
+      <p>When the detection fires, does the alert contain enough context for an analyst to act on it? Or just a true positive with no signal?</p>
+    </div>
+    <div class="box box--red">
+      <h3>Coverage Gaps</h3>
+      <p>Which ATT&amp;CK techniques in the current threat actor profile have no detection coverage? Surface the gaps before they're exploited.</p>
+    </div>
+    <div class="box box--red">
+      <h3>Regression Detection</h3>
+      <p>Which detections that passed last week are failing now? Change-driven regression caught before the next real incident.</p>
+    </div>
+    <div class="box box--red">
+      <h3>Kill Chain Coverage</h3>
+      <p>Map detection coverage across the full ATT&amp;CK kill chain. See where the chain is covered and where adversaries can operate undetected.</p>
+    </div>
+    <div class="box box--red">
+      <h3>TTP-Specific Validation</h3>
+      <p>New campaign TTP intel triggers targeted validation of your detection capability for exactly those techniques.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    The regression detection and TTP-specific validation bullets are the most operationally valuable. Regression catches things breaking silently. TTP-specific validation means your readiness responds to current threat intelligence — not to last year's threat model.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     07  INTEGRATION WITH SANDGNAT
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Ecosystem Integration</span>
+  <h2>From detonation findings to validated detection</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <div class="box box--sand">
+      <h3>SandGNAT → RedGNAT</h3>
+      <p>SandGNAT detonates a suspicious artifact and maps behaviors to ATT&amp;CK techniques. RedGNAT takes those specific techniques and runs a targeted validation — does your detection stack catch what this sample actually does?</p>
+    </div>
+    <div class="box box--red">
+      <h3>The validation loop</h3>
+      <p>This closes the loop from artifact to coverage. You don't just know the sample is malicious — you know whether your defenses would catch it in the wild.</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 1rem;">
+    This is the compounding value of the ecosystem. A detonation finding from SandGNAT can automatically seed a RedGNAT validation run for the same TTPs — no manual hand-off required.
+  </div>
+  <aside class="notes">
+    This is the slide where the ecosystem value proposition really lands for technical audiences. A sample comes in, SandGNAT detonates it and identifies the techniques, RedGNAT validates whether you'd catch those techniques if the same actor ran that playbook against you. That's a closed loop from threat intel to readiness validation in one workflow.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     08  FOR DETECTION ENGINEERS
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="role-tag" style="background: #d91d14;">For Detection Engineers</span>
+  <h2>Stop assuming. Start knowing.</h2>
+  <span class="accent-rule"></span>
+  <ul class="spaced">
+    <li>Rules are continuously validated — regressions surface immediately, not at the next annual exercise</li>
+    <li>New TTP intel from GNAT investigations automatically triggers validation runs for relevant techniques</li>
+    <li>Coverage gaps are mapped against the ATT&amp;CK framework — you can see where you're blind</li>
+    <li>Alert fidelity validation confirms detections don't just fire — they fire with usable context</li>
+    <li>Validation results are STIX objects — they can be queried, trended, and reported like any other intelligence</li>
+  </ul>
+  <aside class="notes">
+    For detection engineers: the shift from "we wrote a rule" to "we continuously verify the rule works" is the core value. The rule library isn't a static artifact — it's a living coverage map with a continuous readiness signal attached.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     09  FOR MANAGERS
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="role-tag" style="background: #2a2a34; color: var(--muted);">For Managers</span>
+  <h2>A readiness state, not a readiness assumption</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li><strong>Continuous evidence</strong> — readiness is a live state, not a point-in-time report from 8 months ago</li>
+      <li><strong>Risk quantification</strong> — coverage gaps are visible and trackable, not theoretical</li>
+      <li><strong>Change impact</strong> — SIEM updates, log source changes, and tuning decisions show their detection impact immediately</li>
+      <li><strong>Audit trail</strong> — every validation run is logged. Regulatory and compliance narratives are supported by evidence.</li>
+    </ul>
+    <div class="box box--red">
+      <h3>The board-level argument</h3>
+      <p>When asked "could you detect this attack?" the answer with CART is a data-backed one — validated this week against your actual environment — not an assumption based on when the rule was written.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    For managers: the board question "are we protected?" becomes answerable with evidence rather than assumption. That's the value prop at the governance level. It's also the risk management argument — you know your coverage state, so you can make informed decisions about where to invest in detection capability.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     10  GETTING STARTED
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Adoption</span>
+  <h2>Getting started with RedGNAT</h2>
+  <span class="accent-rule"></span>
+  <ol class="step-list">
+    <li>Have GNAT core deployed with the workflow engine active</li>
+    <li>Deploy RedGNAT and configure target scope and safety boundaries</li>
+    <li>Define your first validation run — pick 3–5 high-priority ATT&amp;CK techniques relevant to your current threat model</li>
+    <li>Review results: detected, missed, partial. Fix or accept gaps explicitly.</li>
+    <li>Configure scheduled runs and event-driven triggers as confidence grows</li>
+  </ol>
+  <div class="callout">
+    Start with techniques you're confident you can detect. Validate that confidence. Then expand to techniques where you're less certain.
+  </div>
+  <aside class="notes">
+    The recommended starting point is a win — pick techniques where you believe you have coverage and validate that. Seeing results come back as "detected" builds team confidence in the tooling before you start finding the gaps. Then expand to the uncertain territory.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     11  CTA / RESOURCES
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Resources</span>
+  <h2>Next steps</h2>
+  <span class="accent-rule"></span>
+  <div class="cta-grid">
+    <div class="cta-item">
+      <span class="label">Documentation</span>
+      <a href="https://wrhalpin.github.io/RedGNAT/">wrhalpin.github.io/RedGNAT</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Source code</span>
+      <a href="https://github.com/wrhalpin/RedGNAT">github.com/wrhalpin/RedGNAT</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Ecosystem hub</span>
+      <a href="https://wrhalpin.github.io/gnat-o-sphere/">wrhalpin.github.io/gnat-o-sphere</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Ecosystem overview</span>
+      <a href="ecosystem.html">GNAT-o-sphere deck</a>
+    </div>
+  </div>
+  <aside class="notes">
+    Close with docs and GitHub. If questions come up about the SandGNAT → RedGNAT workflow or how SenseGNAT findings feed into validation coverage decisions, point to the ecosystem overview deck.
+  </aside>
+</section>
+
+
+</div><!-- .slides -->
+</div><!-- .reveal -->
+
+<script type="module">
+  import Reveal from 'https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.esm.js';
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'fade',
+    width: 1280,
+    height: 720,
+    margin: 0.06,
+    center: false,
+    controls: true,
+    progress: true,
+  });
+</script>
+</body>
+</html>

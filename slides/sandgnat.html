@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SandGNAT — Malware Sandbox Analysis</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <link rel="stylesheet" href="gnat-theme.css">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+
+<!-- ═══════════════════════════════════════════════════════
+     01  TITLE
+     ═══════════════════════════════════════════════════════ -->
+<section class="slide-title" data-background-color="#0f0f11">
+  <img class="title-logo" src="../images/gnat-o-sphere-256.png" alt="GNAT-o-sphere">
+  <h1 style="color: #da7e20;">SandGNAT</h1>
+  <p class="title-sub">Automated Malware Sandbox Analysis</p>
+  <p class="title-tagline">Detonate. Enrich. Investigate. Repeat.</p>
+  <aside class="notes">
+    SandGNAT deep dive. Audience: malware analysts, detection engineers, SOC leads, and managers evaluating automated detonation capability. We'll cover the detonation pipeline, what SandGNAT extracts from artifacts, how findings flow into GNAT investigations, and what changes in your workflow.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     02  THE PROBLEM
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">The Problem</span>
+  <h2>Suspicious artifacts pile up faster than analysts can detonate them</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li>Manual sandbox submission is slow — each artifact is a ticket, a wait, a manual review</li>
+      <li>Results arrive in sandbox vendor formats — another normalization step before they're useful</li>
+      <li>Detonation findings are disconnected from the investigation they were triggered by</li>
+      <li>Repeat detonation of known samples wastes analyst time and sandbox capacity</li>
+    </ul>
+    <div class="box box--sand">
+      <h3>The enrichment gap</h3>
+      <p>An artifact in an investigation is a question mark until it's detonated. SandGNAT automates the answer — and puts it back in the investigation where the question was asked.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    For analysts: how many artifacts from last month are still sitting in a queue waiting for detonation? For engineers: how many sandbox vendor APIs are you normalizing results from? For managers: what's the average time from artifact discovery to enriched investigation finding?
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     03  WHAT SANDGNAT DOES
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Capabilities</span>
+  <h2 style="color: #da7e20;">Automated detonation &amp; artifact enrichment</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li><strong>Automated submission</strong> — GNAT routes suspicious artifacts to SandGNAT without analyst intervention</li>
+      <li><strong>Detonation &amp; behavioral extraction</strong> — file behavior, network calls, registry changes, dropped files, C2 indicators</li>
+      <li><strong>STIX enrichment</strong> — findings published back to the GNAT investigation graph as structured objects</li>
+      <li><strong>Deduplication</strong> — known samples aren't re-detonated; cached findings are returned immediately</li>
+    </ul>
+    <div class="box box--sand">
+      <h3>Closed loop</h3>
+      <p>An artifact enters the investigation as a question. SandGNAT detonates it, extracts behavioral indicators, and posts the answers back — automatically, without a separate queue or manual correlation step.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Emphasize the closed loop. The analyst submits a suspicious artifact to investigation, GNAT routes it to SandGNAT, SandGNAT detonates it and sends results back. The analyst doesn't leave the investigation graph to get those results.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     04  ARCHITECTURE
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Architecture</span>
+  <h2>Triggered by GNAT. Results back to GNAT.</h2>
+  <span class="accent-rule"></span>
+  <div class="flow-row">
+    <div class="flow-col">
+      <div class="flow-node flow-node--gnat">
+        <span class="fn-step">Trigger</span>
+        <strong>GNAT Workflow Engine</strong>
+        <span>Routes suspicious artifacts when investigation rules match</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-col">
+      <div class="flow-node flow-node--sand">
+        <span class="fn-step">Detonation</span>
+        <strong>SandGNAT</strong>
+        <span>Detonates artifact in isolated environment, extracts behavioral IOCs</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-col">
+      <div class="flow-node flow-node--gnat">
+        <span class="fn-step">Enrichment</span>
+        <strong>Investigation Graph</strong>
+        <span>Detonation findings published as STIX enrichment objects</span>
+      </div>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 1rem;">
+    The detonation pipeline is entirely internal to the ecosystem. No external sandbox vendor required — though connectors to third-party sandboxes are available.
+  </div>
+  <aside class="notes">
+    For engineers: the trigger is a workflow rule in GNAT — configure which artifact types, sizes, or source tags should be automatically routed to SandGNAT. Results come back as STIX. You can also configure GNAT to route to a third-party sandbox via a connector and still get results back in the same STIX format.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     05  WHAT SANDGNAT EXTRACTS
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Extraction</span>
+  <h2>From detonation to structured intelligence</h2>
+  <span class="accent-rule"></span>
+  <div class="cols-3">
+    <div class="box box--sand">
+      <h3>Network Indicators</h3>
+      <p>C2 domains, IPs, URLs contacted during execution. Protocols used, ports, connection timing.</p>
+    </div>
+    <div class="box box--sand">
+      <h3>File Artifacts</h3>
+      <p>Dropped files, written paths, created processes. Hashes for every artifact observed during detonation.</p>
+    </div>
+    <div class="box box--sand">
+      <h3>Registry &amp; System</h3>
+      <p>Registry keys written or modified. Service installations, scheduled tasks, persistence mechanisms observed.</p>
+    </div>
+    <div class="box box--sand">
+      <h3>Behavioral Profile</h3>
+      <p>Execution chain, API calls, injection attempts, anti-analysis techniques detected during sandbox run.</p>
+    </div>
+    <div class="box box--sand">
+      <h3>MITRE ATT&amp;CK Mapping</h3>
+      <p>Behaviors mapped to ATT&amp;CK techniques where applicable. Surfaces relevant TTPs automatically.</p>
+    </div>
+    <div class="box box--sand">
+      <h3>Verdict &amp; Score</h3>
+      <p>Malicious / suspicious / benign verdict with confidence score. Analyst retains final judgment.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    The ATT&amp;CK mapping is worth dwelling on for analysts. SandGNAT doesn't just tell you what the sample did — it frames the behaviors in a language that connects to your detection rules, your threat actor profiles, and your red team validation via RedGNAT.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     06  DEDUPLICATION & CACHING
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Efficiency</span>
+  <h2>Don't detonate the same thing twice</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li>Every detonation result is cached by hash</li>
+      <li>When GNAT routes an artifact that was already detonated, cached results are returned immediately</li>
+      <li>Reduces sandbox capacity consumption — saves resources for novel samples</li>
+      <li>Deduplication works across investigations — findings from a previous case can enrich a new one</li>
+    </ul>
+    <div class="box box--sand">
+      <h3>Cross-investigation value</h3>
+      <p>When a hash recurs across investigations, SandGNAT surfaces its prior detonation history — connecting current activity to past findings automatically.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    For analysts: deduplication means the first analyst to see a sample does the work, and every subsequent investigation that encounters it gets the answer for free. For engineers: this is important for capacity planning — you're not paying detonation cost for every occurrence of a known sample.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     07  INTEGRATION WITH SENSEGNAT & REDGNAT
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Ecosystem Integration</span>
+  <h2>Detonation findings power the wider investigation</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <div class="box box--sense">
+      <h3>SenseGNAT</h3>
+      <p>Network IOCs extracted by SandGNAT feed SenseGNAT's anomaly detection. C2 domains and IPs from detonation become behavioral indicators to watch for in live traffic.</p>
+    </div>
+    <div class="box box--red">
+      <h3>RedGNAT</h3>
+      <p>ATT&amp;CK techniques mapped by SandGNAT seed RedGNAT validation runs. Confirm whether your defenses catch what the sample actually does — not what you assume it does.</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top: 1rem;">
+    A single detonation can simultaneously enrich a network detection rule, validate a detection capability, and close an investigation finding — all from the same artifact.
+  </div>
+  <aside class="notes">
+    This is the compounding value of the ecosystem. One detonation feeds three downstream workflows. The analyst gets a verdict. SenseGNAT gets new behavioral indicators to watch for. RedGNAT gets techniques to validate against. That's a lot of leverage from one sandbox run.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     08  FOR ANALYSTS
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="role-tag" style="background: #da7e20;">For Analysts</span>
+  <h2>Every artifact gets an answer. Automatically.</h2>
+  <span class="accent-rule"></span>
+  <ul class="spaced">
+    <li>Suspicious artifacts are detonated without a separate submission step</li>
+    <li>Detonation results appear in your investigation graph — no context switch to a sandbox console</li>
+    <li>Behavioral indicators from detonation are linked to the artifact and to the broader investigation</li>
+    <li>MITRE ATT&amp;CK mappings surface relevant TTP context immediately</li>
+    <li>Prior detonation history surfaces automatically when a hash recurs</li>
+  </ul>
+  <aside class="notes">
+    The analyst experience is: you add an artifact to an investigation, and by the time you've finished the next pivot, the detonation result is already in the graph. The queue is gone. The manual correlation step is gone. The result is where you need it.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     09  GETTING STARTED
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Adoption</span>
+  <h2>Getting started with SandGNAT</h2>
+  <span class="accent-rule"></span>
+  <ol class="step-list">
+    <li>Have GNAT core deployed with the workflow engine active</li>
+    <li>Deploy SandGNAT and configure the GNAT connector</li>
+    <li>Configure routing rules in GNAT: which artifact types and sources trigger automatic submission</li>
+    <li>Run a test investigation — submit a known sample and verify detonation results land in the graph</li>
+    <li>Tune routing rules to match your operational tempo and sandbox capacity</li>
+  </ol>
+  <div class="callout">
+    Start narrow: route only files from high-confidence suspicious sources. Expand as you validate the pipeline.
+  </div>
+  <aside class="notes">
+    Routing rules are where you control the blast radius of automated detonation. Start conservative — route files that came from a phishing attachment or a suspicious download, not all files everywhere. Tune outward as you build confidence.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     10  CTA / RESOURCES
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Resources</span>
+  <h2>Next steps</h2>
+  <span class="accent-rule"></span>
+  <div class="cta-grid">
+    <div class="cta-item">
+      <span class="label">Documentation</span>
+      <a href="https://wrhalpin.github.io/SandGNAT/">wrhalpin.github.io/SandGNAT</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Source code</span>
+      <a href="https://github.com/wrhalpin/SandGNAT">github.com/wrhalpin/SandGNAT</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Ecosystem hub</span>
+      <a href="https://wrhalpin.github.io/gnat-o-sphere/">wrhalpin.github.io/gnat-o-sphere</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Ecosystem overview</span>
+      <a href="ecosystem.html">GNAT-o-sphere deck</a>
+    </div>
+  </div>
+  <aside class="notes">
+    Close with docs and GitHub. If questions come up about using SandGNAT findings in RedGNAT validation or SenseGNAT behavioral detection, point to those individual decks or the ecosystem overview.
+  </aside>
+</section>
+
+
+</div><!-- .slides -->
+</div><!-- .reveal -->
+
+<script type="module">
+  import Reveal from 'https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.esm.js';
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'fade',
+    width: 1280,
+    height: 720,
+    margin: 0.06,
+    center: false,
+    controls: true,
+    progress: true,
+  });
+</script>
+</body>
+</html>

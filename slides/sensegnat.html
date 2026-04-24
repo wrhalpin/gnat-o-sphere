@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SenseGNAT — Network Profiling & Behavioral Analysis</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <link rel="stylesheet" href="gnat-theme.css">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+
+<!-- ═══════════════════════════════════════════════════════
+     01  TITLE
+     ═══════════════════════════════════════════════════════ -->
+<section class="slide-title" data-background-color="#0f0f11">
+  <img class="title-logo" src="../images/gnat-o-sphere-256.png" alt="GNAT-o-sphere">
+  <h1 style="color: #8a3aa4;">SenseGNAT</h1>
+  <p class="title-sub">Network Profiling &amp; Behavioral Analysis</p>
+  <p class="title-tagline">Surface anomalies. Enrich investigations. Close the traffic-layer gap.</p>
+  <aside class="notes">
+    SenseGNAT deep dive. Audience: SOC analysts, network defenders, engineers evaluating behavioral detection, and managers scoping a behavioral analytics capability. We'll cover what SenseGNAT does, how it integrates with GNAT, what it surfaces, and how findings flow back into investigations.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     02  THE GAP SenseGNAT CLOSES
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">The Problem</span>
+  <h2>Indicator-based detection has a blind spot</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li>Known-bad indicators are only useful when you already know what you're looking for</li>
+      <li>Novel infrastructure, fresh domains, and living-off-the-land techniques don't match existing IOCs</li>
+      <li>Adversaries change indicators faster than threat intel feeds update</li>
+      <li>Traffic-layer behavior often reveals compromise before any indicator is published</li>
+    </ul>
+    <div class="box box--sense">
+      <h3>The behavioral gap</h3>
+      <p>Indicator matching tells you what you already know is bad. Behavioral profiling tells you what is behaving badly — regardless of whether an indicator for it exists yet.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    This is the core argument for behavioral detection as a complement to IOC matching, not a replacement. For analysts: IOC matching is a lookup. Behavioral profiling is a pattern. Both are necessary. For managers: behavioral detection reduces the lag between novel adversary activity and detection.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     03  WHAT SENSEGNAT DOES
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Capabilities</span>
+  <h2 style="color: #8a3aa4;">Network profiling &amp; anomaly detection</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li><strong>Baseline normal</strong> — profile the traffic patterns that represent normal behavior for your environment</li>
+      <li><strong>Surface anomalies</strong> — flag deviations from baseline: unusual beaconing, unexpected laterals, rare protocol usage</li>
+      <li><strong>Enrich GNAT investigations</strong> — publish findings back to the investigation graph automatically</li>
+      <li><strong>Consume raw telemetry via Kafka</strong> — integrates with the GNAT telemetry plane, not a separate pipeline</li>
+    </ul>
+    <div class="box box--sense">
+      <h3>Traffic-layer context</h3>
+      <p>SenseGNAT adds what indicator feeds can't: the behavioral picture of what's happening on the wire, in the context of what's known to be normal for your specific environment.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Key distinction: SenseGNAT profiles YOUR environment. The baseline is specific to your network — not a generic "this looks suspicious" rule set. That specificity reduces false positives dramatically compared to signature-based network detection.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     04  ARCHITECTURE
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Architecture</span>
+  <h2>Built on the GNAT telemetry plane</h2>
+  <span class="accent-rule"></span>
+  <div class="flow-row">
+    <div class="flow-col">
+      <div class="flow-node" style="border-color: var(--line);">
+        <span class="fn-step">Input</span>
+        <strong>Raw Network Telemetry</strong>
+        <span>Flows, NetFlow, packet metadata, DNS query logs</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-col">
+      <div class="flow-node flow-node--gnat">
+        <span class="fn-step">Transport</span>
+        <strong>Kafka</strong>
+        <span>gnat.telemetry topic — shared with GNAT ingestion pipeline</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-col">
+      <div class="flow-node flow-node--sense">
+        <span class="fn-step">Analysis</span>
+        <strong>SenseGNAT</strong>
+        <span>Profile, detect anomalies, score behavior</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-col">
+      <div class="flow-node flow-node--gnat">
+        <span class="fn-step">Output</span>
+        <strong>GNAT Investigation Graph</strong>
+        <span>Findings published as STIX enrichment</span>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    For engineers: SenseGNAT consumes from the same Kafka topic that GNAT's telemetry plane publishes to. No separate ingestion pipeline to maintain. Findings flow back to the GNAT investigation graph as STIX objects — they arrive as enrichment, not as separate alerts that need to be manually correlated.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     05  WHAT SENSEGNAT SURFACES
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Detection Surface</span>
+  <h2>Behaviors, not just indicators</h2>
+  <span class="accent-rule"></span>
+  <div class="cols-3">
+    <div class="box box--sense">
+      <h3>Beaconing</h3>
+      <p>Periodic outbound connections inconsistent with the host's established baseline. C2 traffic before the domain is in any feed.</p>
+    </div>
+    <div class="box box--sense">
+      <h3>Lateral Movement</h3>
+      <p>Unexpected east-west traffic patterns — hosts communicating in ways that deviate from their normal peer groups.</p>
+    </div>
+    <div class="box box--sense">
+      <h3>Protocol Anomalies</h3>
+      <p>Rare or unusual protocol usage from hosts that have no established pattern for that protocol.</p>
+    </div>
+    <div class="box box--sense">
+      <h3>Volume &amp; Timing</h3>
+      <p>Data exfiltration patterns: unusual outbound volumes, off-hours transfers, compressed transfer windows.</p>
+    </div>
+    <div class="box box--sense">
+      <h3>New Infrastructure</h3>
+      <p>First-seen destinations, freshly registered domains, IP ranges with no prior relationship to your environment.</p>
+    </div>
+    <div class="box box--sense">
+      <h3>Peer Deviation</h3>
+      <p>Hosts whose traffic profile diverges from their peer group — workstations behaving like servers, servers acting like endpoints.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Walk through a few of these concretely. Beaconing is the C2 story — you see the traffic before the domain is in any feed. Lateral movement is the post-compromise story — the attacker already has a foothold and is moving. These are the two scenarios where IOC matching fails and behavioral detection succeeds.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     06  INTEGRATION WITH GNAT WORKFLOW
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Workflow Integration</span>
+  <h2>Findings flow into the investigation automatically</h2>
+  <span class="accent-rule"></span>
+  <ol class="step-list">
+    <li>GNAT routes raw telemetry to the Kafka telemetry plane</li>
+    <li>SenseGNAT consumes the stream and builds behavioral profiles</li>
+    <li>Anomalies are detected against the environment-specific baseline</li>
+    <li>Findings are published back to GNAT as STIX relationship objects</li>
+    <li>The investigation graph receives behavioral context alongside indicator enrichment</li>
+    <li>Analyst sees the full picture — IOCs plus behavioral signals — in one workspace</li>
+  </ol>
+  <aside class="notes">
+    The key point here: the analyst doesn't have to go to a separate SenseGNAT console and then correlate findings with the GNAT investigation manually. The integration handles that. Behavioral findings arrive in the graph the same way enrichment from any other source does.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     07  FOR ANALYSTS
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="role-tag" style="background: #8a3aa4;">For Analysts</span>
+  <h2>See what isn't in the feeds yet</h2>
+  <span class="accent-rule"></span>
+  <ul class="spaced">
+    <li>Behavioral signals arrive in your investigation graph alongside IOC enrichment</li>
+    <li>No context-switching to a separate network analytics console</li>
+    <li>Anomalies come with environmental context — not just a score, but a comparison to this host's established baseline</li>
+    <li>First-seen infrastructure surfaces as a signal before it appears in any feed</li>
+    <li>Pivot from a behavioral anomaly to related indicators, campaigns, and infrastructure in the same graph</li>
+  </ul>
+  <aside class="notes">
+    For analysts: the investigation experience doesn't change. You're still in the GNAT investigation graph. SenseGNAT just adds another dimension to the picture — behavioral context from the wire that you wouldn't otherwise have until a feed caught up.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     08  FOR ENGINEERS
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="role-tag" style="background: #2a2a34; color: var(--muted);">For Engineers</span>
+  <h2>One pipeline. Shared transport.</h2>
+  <span class="accent-rule"></span>
+  <ul class="spaced">
+    <li>SenseGNAT consumes from the existing GNAT Kafka telemetry plane — no separate ingestion pipeline</li>
+    <li>Findings published back as STIX — same output format as everything else in the ecosystem</li>
+    <li>Environment-specific baseline is built and maintained by SenseGNAT — no manual tuning of generic rules</li>
+    <li>Open-source — read the profiling logic, tune it for your environment, contribute improvements</li>
+  </ul>
+  <aside class="notes">
+    The engineering story for SenseGNAT is about operational simplicity. The telemetry plane already exists in a GNAT deployment. SenseGNAT is a consumer on that plane — not a new infrastructure requirement. Findings come back as STIX — consistent with how every other piece of the ecosystem communicates.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     09  GETTING STARTED
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Adoption</span>
+  <h2>Getting started with SenseGNAT</h2>
+  <span class="accent-rule"></span>
+  <ol class="step-list">
+    <li>Have GNAT core deployed with the Kafka telemetry plane active</li>
+    <li>Deploy SenseGNAT and point it at the <code>gnat.telemetry</code> topic</li>
+    <li>Let SenseGNAT build an environmental baseline — typically 7–14 days of representative traffic</li>
+    <li>Review initial anomaly findings and tune the sensitivity to your environment</li>
+    <li>Behavioral findings will begin appearing in GNAT investigation graphs automatically</li>
+  </ol>
+  <div class="callout">
+    The baseline period is an investment. The longer SenseGNAT observes normal traffic, the more precise the anomaly detection becomes.
+  </div>
+  <aside class="notes">
+    Set expectations on the baseline period. 7–14 days feels long, but it's what makes the detection environment-specific rather than generic. You're training it to know YOUR normal, not a statistical average of what "enterprise traffic" looks like.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     10  CTA / RESOURCES
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Resources</span>
+  <h2>Next steps</h2>
+  <span class="accent-rule"></span>
+  <div class="cta-grid">
+    <div class="cta-item">
+      <span class="label">Documentation</span>
+      <a href="https://wrhalpin.github.io/SenseGNAT/">wrhalpin.github.io/SenseGNAT</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Source code</span>
+      <a href="https://github.com/wrhalpin/SenseGNAT">github.com/wrhalpin/SenseGNAT</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Ecosystem hub</span>
+      <a href="https://wrhalpin.github.io/gnat-o-sphere/">wrhalpin.github.io/gnat-o-sphere</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Ecosystem overview</span>
+      <a href="ecosystem.html">GNAT-o-sphere deck</a>
+    </div>
+  </div>
+  <aside class="notes">
+    Close with docs and GitHub. If questions come up about how SenseGNAT findings interact with SandGNAT or RedGNAT in a full investigation, direct to the ecosystem overview deck which covers the end-to-end workflow.
+  </aside>
+</section>
+
+
+</div><!-- .slides -->
+</div><!-- .reveal -->
+
+<script type="module">
+  import Reveal from 'https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.esm.js';
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'fade',
+    width: 1280,
+    height: 720,
+    margin: 0.06,
+    center: false,
+    controls: true,
+    progress: true,
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GNAT — Core Platform Deep Dive</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <link rel="stylesheet" href="gnat-theme.css">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+
+<!-- ═══════════════════════════════════════════════════════
+     01  TITLE
+     ═══════════════════════════════════════════════════════ -->
+<section class="slide-title" data-background-color="#0f0f11">
+  <img class="title-logo" src="../images/gnat-o-sphere-256.png" alt="GNAT-o-sphere">
+  <h1 style="color:#ffffff;">GNAT</h1>
+  <p class="title-sub">GNAT's Not A TIP — Core Platform Deep Dive</p>
+  <p class="title-tagline">Ingest · Normalize · Investigate · Export</p>
+  <aside class="notes">
+    This deck is the GNAT core deep dive. Audience: analysts evaluating the platform, engineers planning an integration, and managers scoping an adoption. We go from first principles through architecture, connectors, STIX, workflows, and output. Allow 45–60 minutes for the full session.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     02  WHAT GNAT IS (AND ISN'T)
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Positioning</span>
+  <h2>Not a TIP. Not a SIEM. Not a replacement.</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <div>
+      <h3>What GNAT is</h3>
+      <ul class="spaced">
+        <li>An <strong>investigation &amp; workflow platform</strong> built around a connector surface</li>
+        <li>A <strong>STIX-native normalization layer</strong> between your sources and your analysis</li>
+        <li>A <strong>routing hub</strong> for the GNAT-o-sphere addons</li>
+        <li>An <strong>open-source</strong> alternative to custom integration plumbing</li>
+      </ul>
+    </div>
+    <div>
+      <h3>What GNAT isn't</h3>
+      <ul class="spaced">
+        <li>A threat intelligence platform trying to replace your TIP</li>
+        <li>A SIEM or log aggregation layer</li>
+        <li>A vendor lock-in — STIX 2.1 output travels without GNAT</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    This distinction matters most for managers and architects. GNAT wraps existing tooling — it doesn't fight it. If you have a TIP, GNAT connects to it and adds workflow. If you don't, GNAT's investigation graph fills that role.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     03  THE CORE PROBLEM IT SOLVES
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">The Problem</span>
+  <h2>Every source is a custom integration</h2>
+  <span class="accent-rule"></span>
+  <ul class="spaced">
+    <li>Threat intel arrives from feeds, APIs, SIEMs, sandboxes, ISACs, and vendors — each with a different format</li>
+    <li>Normalizing that data manually consumes analyst hours that should go to analysis</li>
+    <li>One API change upstream breaks something downstream</li>
+    <li>Workflows written against raw vendor data don't survive a vendor switch</li>
+  </ul>
+  <div class="callout">
+    GNAT's answer: 159 connectors behind one normalization layer, with STIX 2.1 as the stable output contract.
+  </div>
+  <aside class="notes">
+    Frame this concretely for analysts: how many hours last quarter went to fixing broken feeds? For engineers: how many one-off integration scripts are you maintaining? GNAT is the answer to both.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     04  CONNECTOR FRAMEWORK
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Architecture</span>
+  <h2>159 connectors. One operating model.</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li><strong>External feeds</strong> — OSINT, commercial, ISAC, government</li>
+      <li><strong>Platform APIs</strong> — SIEMs, TIPs, ticketing, case management</li>
+      <li><strong>Enrichment services</strong> — WHOIS, passive DNS, sandbox results</li>
+      <li><strong>Internal sources</strong> — EDR telemetry, network flows, endpoint logs</li>
+    </ul>
+    <div class="box box--gnat">
+      <h3>One framework to maintain</h3>
+      <p>Every connector follows the same interface contract. Add a source once. Schema changes upstream are handled at the connector layer — your workflows see consistent STIX output regardless of what the vendor changes.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    For engineers: this is the key value prop. The maintenance burden for 159 sources is carried by the connector framework, not by your team writing one-off scripts. Emphasize that STIX 2.1 is the stable contract — you write workflows once against the standard, not against each vendor's changing API shape.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     05  STIX 2.1 AS THE CONTRACT
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Data Standard</span>
+  <h2>STIX 2.1 — the stable contract</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li><strong>Vendor-neutral</strong> — not owned by any vendor, not tied to GNAT</li>
+      <li><strong>Relationship-aware</strong> — expresses connections between indicators, actors, TTPs, and campaigns as first-class objects</li>
+      <li><strong>Machine-readable</strong> — structured JSON bundles that tools can consume without manual parsing</li>
+      <li><strong>Portable</strong> — your STIX bundles travel. Export them, archive them, share them.</li>
+    </ul>
+    <div class="box box--gnat">
+      <h3>Why it matters</h3>
+      <p>When everything GNAT produces is STIX 2.1, your workflows aren't tied to GNAT. If you change tools, your structured intelligence output doesn't disappear with your old platform.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    For technical managers: STIX 2.1 is the exit strategy. You're not locked in. For analysts: it means the relationship graph in your investigation — who connected to what, when, how — is preserved as a structured artifact you can share with anyone using a STIX-compatible tool.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     06  INVESTIGATION WORKFLOW ENGINE
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Workflows</span>
+  <h2>Repeatable investigations, not one-off hunts</h2>
+  <span class="accent-rule"></span>
+  <ol class="step-list">
+    <li>Ingest indicators from one or many connectors</li>
+    <li>Normalize to STIX — relationships, context, and metadata preserved</li>
+    <li>Route artifacts to addons (SenseGNAT, SandGNAT, RedGNAT) as needed</li>
+    <li>Correlate findings in the investigation graph — enrich, pivot, annotate</li>
+    <li>Produce structured output: STIX bundles, reports, case export</li>
+  </ol>
+  <div class="callout" style="margin-top: 1rem;">
+    Build a workflow once. Run it against any combination of connected sources. The investigation path is the repeatable asset — not the data.
+  </div>
+  <aside class="notes">
+    This is the message for analysts: your investigation methodology becomes the durable thing. You stop rebuilding the same hunt from scratch every time a new indicator set comes in. Encode it once, run it many times.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     07  THE INVESTIGATION GRAPH
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Investigation Graph</span>
+  <h2>From raw indicator to connected evidence</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li>Visualize relationships between indicators, actors, infrastructure, and campaigns</li>
+      <li>Pivot from an IP to associated domains, ASNs, and malware samples</li>
+      <li>Annotate nodes with analyst findings and link to source evidence</li>
+      <li>Add enrichment from addons — detonation results, behavioral profiles, validation outcomes</li>
+      <li>Export the full graph as a STIX bundle or structured report</li>
+    </ul>
+    <div class="box box--gnat">
+      <h3>Not a dashboard</h3>
+      <p>The investigation graph is an active workspace — you build the picture as the investigation progresses. It's not a static visualization of pre-ingested data.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    For investigators: this is where the analysis actually happens. The graph isn't just for display — it's the workspace. Pivoting, annotating, linking to evidence — all of this happens in the graph before it becomes a report.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     08  ADDON ROUTING
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Ecosystem Integration</span>
+  <h2>GNAT as the routing hub</h2>
+  <span class="accent-rule"></span>
+  <div class="flow-row">
+    <div class="flow-col">
+      <div class="flow-node flow-node--gnat">
+        <span class="fn-step">Hub</span>
+        <strong>GNAT</strong>
+        <span>Ingest, normalize, correlate, route</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-col flow-col--wide">
+      <div class="flow-node flow-node--sense">
+        <strong>SenseGNAT</strong>
+        <span>Route telemetry → behavioral profiling &amp; anomaly detection</span>
+      </div>
+      <div class="flow-node flow-node--sand">
+        <strong>SandGNAT</strong>
+        <span>Submit suspicious artifacts → detonation &amp; enrichment results</span>
+      </div>
+      <div class="flow-node flow-node--red">
+        <strong>RedGNAT</strong>
+        <span>Trigger validation runs → adversary emulation outcomes</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-col">
+      <div class="flow-node flow-node--gnat">
+        <span class="fn-step">Output</span>
+        <strong>Investigation Graph</strong>
+        <span>All findings converge in one unified view</span>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    The routing is where GNAT transforms from a connector framework into an ecosystem hub. The workflow engine decides what goes to which addon — you configure the routing rules once. Findings flow back and attach to the investigation automatically.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     09  OUTPUT & PORTABILITY
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Output</span>
+  <h2>What leaves GNAT travels independently</h2>
+  <span class="accent-rule"></span>
+  <div class="cols-3">
+    <div class="box box--gnat">
+      <h3>STIX 2.1 Bundles</h3>
+      <p>Machine-readable, vendor-neutral. Share with any STIX-compatible platform, archive for recall, or feed downstream tools automatically.</p>
+    </div>
+    <div class="box box--gnat">
+      <h3>Structured Reports</h3>
+      <p>Human-readable reports generated from investigation graph data. Consistent format across every investigation, not rebuilt from scratch each time.</p>
+    </div>
+    <div class="box box--gnat">
+      <h3>Case Export</h3>
+      <p>Push case data to ticketing, SOAR, or case management. The investigation record doesn't stay locked inside the platform.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    For managers: this is your audit trail and your exit ramp. For engineers: this is the integration point with downstream tooling. For analysts: your report format is consistent because the data model is consistent — not because someone templated a Word doc.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     10  FOR ANALYSTS
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="role-tag">For Analysts</span>
+  <h2>Less plumbing. More analysis.</h2>
+  <span class="accent-rule"></span>
+  <ul class="spaced">
+    <li>Feeds are already normalized when you start an investigation — no pre-work</li>
+    <li>The graph builds as you pivot — context accumulates in one place</li>
+    <li>Workflow templates encode your investigation methodology so you can run it, not rebuild it</li>
+    <li>Enrichment from addons lands in the investigation automatically</li>
+    <li>Reports come from the graph — not from a separate document written after the fact</li>
+  </ul>
+  <aside class="notes">
+    The analyst pitch is simple: everything that happens before the actual analysis has already been done. Your time starts at the graph, not at the feed parser.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     11  FOR ENGINEERS
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="role-tag" style="background: #2a2a34; color: var(--muted);">For Engineers</span>
+  <h2>One framework. Not 159 scripts.</h2>
+  <span class="accent-rule"></span>
+  <ul class="spaced">
+    <li>Write one connector interface — all 159 sources follow the same pattern</li>
+    <li>API changes upstream are handled at the connector layer — workflows downstream see stable STIX</li>
+    <li>Addon routing is configuration, not code — change where artifacts go without rewriting logic</li>
+    <li>STIX 2.1 output integrates cleanly with any downstream tool that speaks the standard</li>
+    <li>Open-source — read the code, fork it, contribute connectors for your environment</li>
+  </ul>
+  <aside class="notes">
+    The engineering pitch is about maintenance cost. The alternative isn't "no integration work" — it's 159 independent maintenance burdens versus one framework. GNAT moves the integration cost to a shared layer.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     12  FOR MANAGERS
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="role-tag" style="background: #1a2a1a; color: #7ab87a;">For Managers</span>
+  <h2>Durable investment. Portable output.</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li><strong>No vendor lock-in</strong> — STIX 2.1 output lives independently of GNAT</li>
+      <li><strong>Incremental adoption</strong> — start with GNAT core, add addons when ready</li>
+      <li><strong>Open-source</strong> — no licensing cost, full access to the code</li>
+      <li><strong>Team leverage</strong> — analyst workflows encoded in the platform, not in individual knowledge</li>
+    </ul>
+    <div class="box box--gnat">
+      <h3>The durability argument</h3>
+      <p>When your investigation workflow is a repeatable template backed by a vendor-neutral standard, it survives vendor changes, team changes, and tool changes. That's the investment you're making.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    For managers: frame this as reducing single points of failure. If one analyst holds all the workflow knowledge, that's a risk. If the workflow is encoded in the platform and the output is in a portable standard, the team's capability is more durable.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     13  GETTING STARTED
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Adoption</span>
+  <h2>Getting started with GNAT</h2>
+  <span class="accent-rule"></span>
+  <ol class="step-list">
+    <li>Deploy GNAT core — open-source, self-hosted</li>
+    <li>Connect your first sources — pick 2–3 feeds you already rely on</li>
+    <li>Run your first investigation — one indicator, full pivot through the graph</li>
+    <li>Build a workflow template from a real investigation you just completed</li>
+    <li>Add addons as capability needs surface</li>
+  </ol>
+  <div class="callout">
+    Incremental adoption is the design. You don't need all 159 connectors on day one.
+  </div>
+  <aside class="notes">
+    The goal here is to make adoption feel achievable, not overwhelming. The connector surface is large, but you don't engage all of it at once. Start with the sources you already trust, validate the workflow, then expand.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     14  CTA / RESOURCES
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Resources</span>
+  <h2>Next steps</h2>
+  <span class="accent-rule"></span>
+  <div class="cta-grid">
+    <div class="cta-item">
+      <span class="label">Documentation</span>
+      <a href="https://wrhalpin.github.io/GNAT/">wrhalpin.github.io/GNAT</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Source code</span>
+      <a href="https://github.com/wrhalpin/GNAT">github.com/wrhalpin/GNAT</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Ecosystem hub</span>
+      <a href="https://wrhalpin.github.io/gnat-o-sphere/">wrhalpin.github.io/gnat-o-sphere</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Ecosystem overview deck</span>
+      <a href="ecosystem.html">slides/ecosystem.html</a>
+    </div>
+  </div>
+  <aside class="notes">
+    Close by pointing people to the docs and GitHub. If there are questions about addons, direct them to the individual addon decks — SenseGNAT, SandGNAT, RedGNAT each have their own deep-dive sessions.
+  </aside>
+</section>
+
+
+</div><!-- .slides -->
+</div><!-- .reveal -->
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.esm.js" type="module">
+</script>
+<script type="module">
+  import Reveal from 'https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.esm.js';
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'fade',
+    width: 1280,
+    height: 720,
+    margin: 0.06,
+    center: false,
+    controls: true,
+    progress: true,
+  });
+</script>
+</body>
+</html>
