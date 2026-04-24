@@ -2,6 +2,8 @@
    GNAT-o-sphere — Reveal.js Theme
    ============================================================ */
 
+/* ── CSS variable definitions (used by reveal.css internals) ── */
+
 .reveal {
   --r-background-color:           #0f0f11;
   --r-main-font:                  Inter, Arial, sans-serif;
@@ -41,7 +43,32 @@
   --red:     #d91d14;
 }
 
-body { background: #0f0f11; }
+/* ── Explicit base colors (ensure visibility without a Reveal base theme) ── */
+
+body,
+.reveal-viewport {
+  background: #0f0f11;
+  background-color: #0f0f11;
+}
+
+.reveal {
+  font-family: Inter, Arial, sans-serif;
+  font-size: 32px;
+  color: #c8cad2;
+  background-color: #0f0f11;
+}
+
+.reveal a {
+  color: #d42c1e;
+  text-decoration: none;
+}
+
+.reveal a:hover { color: #b01e13; }
+
+.reveal ::selection {
+  background: #d42c1e;
+  color: #fff;
+}
 
 /* ── Base layout ── */
 
@@ -55,20 +82,61 @@ body { background: #0f0f11; }
 /* ── Typography ── */
 
 .reveal h1,
-.reveal h2 { font-weight: 800; }
-.reveal h3  { font-weight: 700; color: var(--r-main-color); }
+.reveal h2 {
+  color: #ffffff;
+  font-family: Inter, Arial, sans-serif;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-shadow: none;
+  text-transform: none;
+  margin: 0 0 0.6rem 0;
+  word-wrap: break-word;
+}
 
-.reveal p   { margin: 0 0 0.5em; }
+.reveal h1 { font-size: 2.2em; }
+.reveal h2 { font-size: 1.5em; }
 
-.reveal strong { color: #fff; font-weight: 600; }
+.reveal h3 {
+  color: #c8cad2;
+  font-family: Inter, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 1.1em;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  text-shadow: none;
+  margin: 0 0 0.6rem 0;
+}
+
+.reveal h4 {
+  color: #c8cad2;
+  font-weight: 700;
+  font-size: 0.9em;
+  margin: 0 0 0.6rem 0;
+}
+
+.reveal p {
+  margin: 0 0 0.5em;
+  color: #c8cad2;
+  line-height: 1.4;
+}
+
+.reveal strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.reveal em { color: #c8cad2; }
 
 .reveal code {
-  background: var(--surface);
-  border: 1px solid var(--line);
+  background: #1a1a1e;
+  border: 1px solid #2a2a34;
   border-radius: 4px;
   padding: 0.1em 0.35em;
   font-size: 0.85em;
   color: #edeef2;
+  font-family: 'Courier New', monospace;
 }
 
 /* ── Lists ── */
@@ -77,6 +145,7 @@ body { background: #0f0f11; }
   list-style: none;
   padding: 0;
   margin: 0.5em 0 0;
+  color: #c8cad2;
 }
 
 .reveal ul li {
@@ -84,13 +153,14 @@ body { background: #0f0f11; }
   padding-left: 1.2em;
   margin-bottom: 0.45em;
   line-height: 1.4;
+  color: #c8cad2;
 }
 
 .reveal ul li::before {
   content: '—';
   position: absolute;
   left: 0;
-  color: var(--brand);
+  color: #d42c1e;
   font-weight: 700;
 }
 
@@ -104,7 +174,7 @@ body { background: #0f0f11; }
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--muted);
+  color: #8a8a9a;
   margin-bottom: 0.4em;
 }
 
@@ -112,7 +182,7 @@ body { background: #0f0f11; }
   display: block;
   width: 2.5rem;
   height: 3px;
-  background: var(--brand);
+  background: #d42c1e;
   border-radius: 2px;
   margin: 0.6rem 0 0.9rem;
 }
@@ -137,14 +207,14 @@ body { background: #0f0f11; }
 
 .reveal .title-sub {
   font-size: 0.6em;
-  color: var(--muted);
+  color: #8a8a9a;
   margin: 0.25em 0 0;
   font-weight: 400;
 }
 
 .reveal .title-tagline {
   font-size: 0.45em;
-  color: var(--dim);
+  color: #5a5a6a;
   margin: 0.15em 0 0;
   font-weight: 400;
 }
@@ -186,8 +256,8 @@ body { background: #0f0f11; }
 /* ── Box / card ── */
 
 .reveal .box {
-  background: var(--surface);
-  border: 1px solid var(--line);
+  background: #1a1a1e;
+  border: 1px solid #2a2a34;
   border-radius: 10px;
   padding: 0.85rem 1rem;
 }
@@ -195,31 +265,34 @@ body { background: #0f0f11; }
 .reveal .box h3 {
   font-size: 0.7em;
   margin: 0 0 0.3em;
+  color: #c8cad2;
 }
 
 .reveal .box p,
 .reveal .box ul {
   font-size: 0.55em;
-  color: var(--muted);
+  color: #8a8a9a;
   margin: 0;
 }
 
+.reveal .box ul li { color: #8a8a9a; }
+
 .reveal .box ul { margin-top: 0.3em; }
 
-.reveal .box--gnat  { border-color: var(--gnat);  }
-.reveal .box--gnat  h3 { color: var(--gnat); }
-.reveal .box--sense { border-color: var(--sense); }
-.reveal .box--sense h3 { color: var(--sense); }
-.reveal .box--sand  { border-color: var(--sand);  }
-.reveal .box--sand  h3 { color: var(--sand); }
-.reveal .box--red   { border-color: var(--red);   }
-.reveal .box--red   h3 { color: var(--red); }
+.reveal .box--gnat  { border-color: #ffffff; }
+.reveal .box--gnat  h3 { color: #ffffff; }
+.reveal .box--sense { border-color: #8a3aa4; }
+.reveal .box--sense h3 { color: #8a3aa4; }
+.reveal .box--sand  { border-color: #da7e20; }
+.reveal .box--sand  h3 { color: #da7e20; }
+.reveal .box--red   { border-color: #d91d14; }
+.reveal .box--red   h3 { color: #d91d14; }
 
 /* ── Callout ── */
 
 .reveal .callout {
-  background: var(--surface);
-  border-left: 3px solid var(--brand);
+  background: #1a1a1e;
+  border-left: 3px solid #d42c1e;
   border-radius: 0 8px 8px 0;
   padding: 0.7rem 1rem;
   margin-top: 0.75rem;
@@ -231,7 +304,7 @@ body { background: #0f0f11; }
 
 .reveal .role-tag {
   display: inline-block;
-  background: var(--brand);
+  background: #d42c1e;
   color: #fff;
   font-size: 0.38em;
   font-weight: 700;
@@ -262,8 +335,8 @@ body { background: #0f0f11; }
 .reveal .flow-col--wide { flex: 1.25; }
 
 .reveal .flow-node {
-  background: var(--surface);
-  border: 1px solid var(--line);
+  background: #1a1a1e;
+  border: 1px solid #2a2a34;
   border-radius: 7px;
   padding: 0.55rem 0.75rem;
   flex: 1;
@@ -274,7 +347,7 @@ body { background: #0f0f11; }
   font-size: 0.35em;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--muted);
+  color: #8a8a9a;
   margin-bottom: 0.25em;
 }
 
@@ -282,29 +355,30 @@ body { background: #0f0f11; }
   display: block;
   font-size: 0.5em;
   font-weight: 700;
+  color: #c8cad2;
   margin-bottom: 0.2em;
 }
 
 .reveal .flow-node span {
   display: block;
   font-size: 0.38em;
-  color: var(--muted);
+  color: #8a8a9a;
   line-height: 1.35;
 }
 
-.reveal .flow-node--gnat  { border-color: var(--gnat); }
-.reveal .flow-node--gnat  strong { color: var(--gnat); }
-.reveal .flow-node--sense { border-color: var(--sense); }
-.reveal .flow-node--sense strong { color: var(--sense); }
-.reveal .flow-node--sand  { border-color: var(--sand); }
-.reveal .flow-node--sand  strong { color: var(--sand); }
-.reveal .flow-node--red   { border-color: var(--red); }
-.reveal .flow-node--red   strong { color: var(--red); }
+.reveal .flow-node--gnat  { border-color: #ffffff; }
+.reveal .flow-node--gnat  strong { color: #ffffff; }
+.reveal .flow-node--sense { border-color: #8a3aa4; }
+.reveal .flow-node--sense strong { color: #8a3aa4; }
+.reveal .flow-node--sand  { border-color: #da7e20; }
+.reveal .flow-node--sand  strong { color: #da7e20; }
+.reveal .flow-node--red   { border-color: #d91d14; }
+.reveal .flow-node--red   strong { color: #d91d14; }
 
 .reveal .flow-arrow {
   display: flex;
   align-items: center;
-  color: var(--dim);
+  color: #5a5a6a;
   font-size: 0.85em;
   flex-shrink: 0;
 }
@@ -324,13 +398,14 @@ body { background: #0f0f11; }
   margin-bottom: 0.55em;
   position: relative;
   line-height: 1.4;
+  color: #c8cad2;
 }
 
 .reveal ol.step-list li::before {
   content: counter(steps);
   position: absolute;
   left: 0;
-  color: var(--brand);
+  color: #d42c1e;
   font-weight: 800;
   font-size: 0.9em;
 }
@@ -345,8 +420,8 @@ body { background: #0f0f11; }
 }
 
 .reveal .cta-item {
-  background: var(--surface);
-  border: 1px solid var(--line);
+  background: #1a1a1e;
+  border: 1px solid #2a2a34;
   border-radius: 9px;
   padding: 0.75rem 1rem;
 }
@@ -356,20 +431,20 @@ body { background: #0f0f11; }
   font-size: 0.36em;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--muted);
+  color: #8a8a9a;
   margin-bottom: 0.4em;
 }
 
 .reveal .cta-item a {
   font-size: 0.5em;
-  color: var(--brand);
+  color: #d42c1e;
   text-decoration: none;
   word-break: break-all;
 }
 
 /* ── Reveal.js chrome ── */
 
-.reveal .progress { height: 3px; color: var(--brand); }
-.reveal .progress span { background: var(--brand); }
-.reveal .controls { color: var(--brand); }
-.reveal .slide-number { background: transparent; color: var(--dim); font-size: 0.75rem; }
+.reveal .progress { height: 3px; color: #d42c1e; }
+.reveal .progress span { background: #d42c1e; }
+.reveal .controls { color: #d42c1e; }
+.reveal .slide-number { background: transparent; color: #5a5a6a; font-size: 0.75rem; }
