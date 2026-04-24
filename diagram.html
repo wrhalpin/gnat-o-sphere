@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canonical Workflow Diagram — GNAT-o-sphere</title>
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .diagram-page {
+      padding: 2.5rem 0 3rem;
+    }
+    .diagram-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .diagram-header h1 {
+      margin: 0;
+      font-size: 1.6rem;
+    }
+    .diagram-nav {
+      display: flex;
+      gap: 1rem;
+      font-size: .875rem;
+    }
+    .diagram-nav a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .diagram-nav a:hover {
+      color: var(--ink);
+    }
+    .diagram-full {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 2rem;
+      overflow-x: auto;
+    }
+    .diagram-full .mermaid {
+      min-width: 700px;
+    }
+  </style>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        background:          '#111113',
+        mainBkg:             '#1c1c20',
+        nodeBorder:          '#2a2a34',
+        clusterBkg:          '#1c1c20',
+        edgeLabelBackground: '#111113',
+        lineColor:           '#8a8a9a',
+        primaryTextColor:    '#edeef2',
+        fontSize:            '15px',
+      }
+    });
+  </script>
+</head>
+<body>
+
+  <main>
+    <div class="wrap diagram-page">
+      <div class="diagram-header">
+        <h1>Canonical Workflow</h1>
+        <nav class="diagram-nav">
+          <a href="workflow.html">Read the doc →</a>
+          <a href="index.html">← GNAT-o-sphere</a>
+        </nav>
+      </div>
+      <div class="diagram-full">
+        <pre class="mermaid">
+%%{init: {'flowchart': {'curve': 'monotoneY'}}}%%
+flowchart TD
+    classDef gnat      fill:#1c1c20,stroke:#ffffff,color:#edeef2
+    classDef sensegnat fill:#8a3aa4,stroke:#6a2080,color:#fff
+    classDef sandgnat  fill:#da7e20,stroke:#b06010,color:#fff
+    classDef redgnat   fill:#d91d14,stroke:#a00c04,color:#fff
+    classDef output    fill:#1c1c20,stroke:#8a8a9a,color:#edeef2
+
+    n1["External Telemetry &amp; Sources"]:::gnat
+    n2["GNAT Ingestion &amp; Connectors"]:::gnat
+    n3["Kafka Telemetry Plane<br/>(gnat.telemetry)"]:::gnat
+    n4["SenseGNAT<br/>Behavioral Profiling &amp; Anomaly Detection"]:::sensegnat
+    n5["GNAT STIX Conversion &amp; Correlation"]:::gnat
+    n6["SandGNAT<br/>Detonation &amp; Artifact Enrichment"]:::sandgnat
+    n7["RedGNAT<br/>Adversary Emulation &amp; Validation"]:::redgnat
+    n8["Unified Investigation Graph"]:::gnat
+    n9["Reporting, Export,<br/>Operator Action"]:::output
+
+    n1 -->|ingest| n2
+    n2 -->|"route telemetry"| n3
+    n3 -->|"consume raw flow data"| n4
+    n2 -->|"normalize / convert"| n5
+    n4 -->|"publish findings"| n5
+    n5 -->|"submit suspicious artifacts"| n6
+    n5 -->|"trigger validation"| n7
+    n6 -->|"detonation findings"| n8
+    n7 -->|"validation results"| n8
+    n5 -->|"intel &amp; evidence"| n8
+    n8 -->|"case output"| n9
+        </pre>
+      </div>
+    </div>
+  </main>
+
+  <hr>
+  <footer>
+    <div class="wrap footer-inner">
+      <span>GNAT — GNAT's Not A TIP</span>
+      <span><a href="https://github.com/wrhalpin/gnat-o-sphere">GitHub</a> &nbsp;·&nbsp; Apache 2.0</span>
+    </div>
+  </footer>
+
+</body>
+</html>

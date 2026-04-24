@@ -208,15 +208,36 @@ a { color: var(--brand); }
 }
 
 .flow-wrap {
-  overflow-x: auto;
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
 }
 
 .flow-wrap .mermaid {
-  min-width: 560px;
+  zoom: 0.55;
+  pointer-events: none;
+}
+
+.flow-fullsize-link {
+  position: absolute;
+  top: .75rem;
+  right: .75rem;
+  font-size: .75rem;
+  padding: .3rem .65rem;
+  background: var(--surface-3);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.flow-fullsize-link:hover {
+  color: var(--ink);
+  border-color: var(--muted);
 }
 
 /* ── Divider ── */
