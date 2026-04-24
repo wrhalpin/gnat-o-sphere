@@ -180,64 +180,95 @@ a { color: var(--brand); }
   color: #fff;
 }
 
-/* ── Workflow diagram ── */
+/* ── Workflow teaser ── */
 
-.flow-intro {
+.flow-teaser {
+  display: flex;
+  align-items: stretch;
+  gap: .5rem;
+  margin-bottom: 1rem;
+}
+
+.flow-arrow {
+  display: flex;
+  align-items: center;
+  font-size: 1.25rem;
+  color: var(--muted);
+  flex-shrink: 0;
+  padding-top: .5rem;
+}
+
+.flow-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+
+.flow-stage--addons {
+  flex: 1.2;
+}
+
+.flow-node {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .75rem 1rem;
+  flex: 1;
+}
+
+.flow-node strong {
+  display: block;
   font-size: .95rem;
+  font-weight: 600;
+  margin-bottom: .2rem;
+}
+
+.flow-node p {
+  margin: 0;
+  font-size: .78rem;
   color: var(--muted);
-  margin-bottom: 1.25rem;
+  line-height: 1.4;
 }
 
-.flow-intro a {
-  color: var(--brand);
-  text-decoration: none;
-  white-space: nowrap;
+.flow-step {
+  display: block;
+  font-size: .68rem;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--muted);
+  margin-bottom: .3rem;
 }
 
-.flow-intro a:hover { text-decoration: underline; }
+.flow-node--gnat      { border-color: #ffffff; }
+.flow-node--gnat strong { color: #ffffff; }
+.flow-node--sensegnat { border-color: #8a3aa4; }
+.flow-node--sensegnat strong { color: #8a3aa4; }
+.flow-node--sandgnat  { border-color: #da7e20; }
+.flow-node--sandgnat strong { color: #da7e20; }
+.flow-node--redgnat   { border-color: #d91d14; }
+.flow-node--redgnat strong { color: #d91d14; }
 
-.flow-doc-link {
+.flow-actions {
+  display: flex;
+  gap: 1.5rem;
   font-size: .875rem;
+  justify-content: flex-end;
+}
+
+.flow-actions a {
   color: var(--muted);
   text-decoration: none;
 }
 
-.flow-doc-link:hover {
+.flow-actions a:hover {
   color: var(--ink);
   text-decoration: underline;
 }
 
-.flow-wrap {
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.flow-wrap .mermaid {
-  zoom: 0.55;
-  pointer-events: none;
-}
-
-.flow-fullsize-link {
-  position: absolute;
-  top: .75rem;
-  right: .75rem;
-  font-size: .75rem;
-  padding: .3rem .65rem;
-  background: var(--surface-3);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  color: var(--muted);
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.flow-fullsize-link:hover {
-  color: var(--ink);
-  border-color: var(--muted);
+@media (max-width: 680px) {
+  .flow-teaser  { flex-direction: column; }
+  .flow-arrow   { justify-content: center; transform: rotate(90deg); }
 }
 
 /* ── Divider ── */

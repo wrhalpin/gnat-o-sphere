@@ -13,25 +13,8 @@
   <meta property="og:description" content="Open-source threat intelligence tools built for analysts, investigators, and engineers.">
   <meta property="og:image" content="images/gnat-o-sphere-og.png">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="style.css?v=11">
-  <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: 'dark',
-      themeVariables: {
-        darkMode: true,
-        background:          '#111113',
-        mainBkg:             '#1c1c20',
-        nodeBorder:          '#2a2a34',
-        clusterBkg:          '#1c1c20',
-        edgeLabelBackground: '#111113',
-        lineColor:           '#8a8a9a',
-        primaryTextColor:    '#edeef2',
-        fontSize:            '14px',
-      }
-    });
-  </script>
+  <link rel="stylesheet" href="style.css?v=12">
+
 </head>
 <body>
 
@@ -88,43 +71,57 @@
     <section class="section">
       <div class="wrap">
         <p class="section-label">Canonical Workflow</p>
-        <p class="flow-intro">How the ecosystem fits together end-to-end — from raw telemetry to investigation and reporting. <a href="workflow.html">Read the full workflow documentation →</a></p>
-        <div class="flow-wrap">
-          <a class="flow-fullsize-link" href="diagram.html">View full size ↗</a>
-          <pre class="mermaid">
-%%{init: {'flowchart': {'curve': 'monotoneY'}}}%%
-flowchart TD
-    classDef gnat      fill:#1c1c20,stroke:#ffffff,color:#edeef2
-    classDef sensegnat fill:#8a3aa4,stroke:#6a2080,color:#fff
-    classDef sandgnat  fill:#da7e20,stroke:#b06010,color:#fff
-    classDef redgnat   fill:#d91d14,stroke:#a00c04,color:#fff
-    classDef output    fill:#1c1c20,stroke:#8a8a9a,color:#edeef2
+        <div class="flow-teaser">
 
-    n1["External Telemetry &amp; Sources"]:::gnat
-    n2["GNAT Ingestion &amp; Connectors"]:::gnat
-    n3["Kafka Telemetry Plane<br/>(gnat.telemetry)"]:::gnat
-    n4["SenseGNAT<br/>Behavioral Profiling &amp; Anomaly Detection"]:::sensegnat
-    n5["GNAT STIX Conversion &amp; Correlation"]:::gnat
-    n6["SandGNAT<br/>Detonation &amp; Artifact Enrichment"]:::sandgnat
-    n7["RedGNAT<br/>Adversary Emulation &amp; Validation"]:::redgnat
-    n8["Unified Investigation Graph"]:::gnat
-    n9["Reporting, Export,<br/>Operator Action"]:::output
+          <div class="flow-stage">
+            <div class="flow-node flow-node--neutral">
+              <span class="flow-step">Collect</span>
+              <strong>Telemetry &amp; Sources</strong>
+              <p>External indicators and raw network telemetry enter the ecosystem</p>
+            </div>
+          </div>
 
-    n1 -->|ingest| n2
-    n2 -->|"route telemetry"| n3
-    n3 -->|"consume raw flow data"| n4
-    n2 -->|"normalize / convert"| n5
-    n4 -->|"publish findings"| n5
-    n5 -->|"submit suspicious artifacts"| n6
-    n5 -->|"trigger validation"| n7
-    n6 -->|"detonation findings"| n8
-    n7 -->|"validation results"| n8
-    n5 -->|"intel &amp; evidence"| n8
-    n8 -->|"case output"| n9
-          </pre>
+          <div class="flow-arrow">→</div>
+
+          <div class="flow-stage">
+            <div class="flow-node flow-node--gnat">
+              <span class="flow-step">Process</span>
+              <strong>GNAT</strong>
+              <p>Ingest, normalize, convert to STIX, and route to addons</p>
+            </div>
+          </div>
+
+          <div class="flow-arrow">→</div>
+
+          <div class="flow-stage flow-stage--addons">
+            <div class="flow-node flow-node--sensegnat">
+              <strong>SenseGNAT</strong>
+              <p>Behavioral profiling &amp; anomaly detection</p>
+            </div>
+            <div class="flow-node flow-node--sandgnat">
+              <strong>SandGNAT</strong>
+              <p>Malware detonation &amp; artifact enrichment</p>
+            </div>
+            <div class="flow-node flow-node--redgnat">
+              <strong>RedGNAT</strong>
+              <p>Adversary emulation &amp; validation</p>
+            </div>
+          </div>
+
+          <div class="flow-arrow">→</div>
+
+          <div class="flow-stage">
+            <div class="flow-node flow-node--neutral">
+              <span class="flow-step">Report</span>
+              <strong>Investigate &amp; Act</strong>
+              <p>Unified investigation graph, reporting, and operator action</p>
+            </div>
+          </div>
+
         </div>
-        <div style="margin-top:1rem;text-align:right;">
-          <a class="flow-doc-link" href="workflow.html">Full workflow documentation →</a>
+        <div class="flow-actions">
+          <a href="diagram.html">View full diagram →</a>
+          <a href="workflow.html">Read the workflow doc →</a>
         </div>
       </div>
     </section>
