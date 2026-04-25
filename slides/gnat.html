@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GNAT — Core Platform Deep Dive</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
-  <link rel="stylesheet" href="gnat-theme.css?v=2">
+  <link rel="stylesheet" href="gnat-theme.css?v=3">
 </head>
 <body>
 <div class="reveal">
@@ -106,7 +106,58 @@
 
 
 <!-- ═══════════════════════════════════════════════════════
-     05  STIX 2.1 AS THE CONTRACT
+     05  CONNECTOR CATALOGUE
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Connector Catalogue</span>
+  <h2>159 connectors. The stack you already use.</h2>
+  <span class="accent-rule"></span>
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.55rem; margin-top: 0.4rem;">
+    <div class="box box--gnat">
+      <h3>Threat Intel Platforms (24)</h3>
+      <p>CrowdStrike Falcon · Recorded Future · Mandiant · MISP · OpenCTI · Anomali ThreatStream · VirusTotal · AlienVault OTX · Microsoft Defender TI · ThreatConnect · Cisco Talos · MITRE ATT&amp;CK · Abuse.ch · AbuseIPDB · Intel 471 · Flashpoint · Group-IB · ZeroFox · SOCRadar · Pulsedive · +4 more</p>
+    </div>
+    <div class="box box--gnat">
+      <h3>SIEM &amp; Log Analytics (12)</h3>
+      <p>Splunk Enterprise · Microsoft Sentinel · Elastic SIEM · IBM QRadar · Google Chronicle · Wazuh · LogRhythm · Graylog · OSSIM · Security Onion · Datadog SIEM · Cribl Stream</p>
+    </div>
+    <div class="box box--gnat">
+      <h3>Endpoint &amp; EDR (20)</h3>
+      <p>SentinelOne · CrowdStrike (via TI) · VMware Carbon Black · Trellix XDR · Sophos Central · Tanium · Trend Micro Vision One · Fortinet FortiEDR · FortiSIEM · Shodan · GreyNoise · CISA KEV · Armis · Axonius · Claroty · Stellar Cyber · Netskope · +3 more</p>
+    </div>
+    <div class="box box--gnat">
+      <h3>SOAR &amp; Incident Response (7)</h3>
+      <p>Palo Alto XSOAR · TheHive · GreyMatter · FortiSOAR · ServiceNow ITSM · ServiceNow SecOps · Atlassian Jira</p>
+    </div>
+    <div class="box box--gnat">
+      <h3>Network Detection (9)</h3>
+      <p>Zeek · Suricata IDS/IPS · Snort · Vectra AI · ExtraHop Reveal(x) · Darktrace · Cisco Umbrella · Nozomi Networks · Dragos Platform</p>
+    </div>
+    <div class="box box--gnat">
+      <h3>Cloud &amp; ASM (16)</h3>
+      <p>Wiz · AWS Security Hub · Censys · Shodan · Palo Alto Prisma Cloud · Cortex Xpanse · Orca Security · CyCognito · SecurityTrails · DomainTools Iris · RiskRecon · BitSight · UpGuard · JupiterOne · runZero · Silent Push</p>
+    </div>
+    <div class="box box--gnat">
+      <h3>Vuln Management (8)</h3>
+      <p>Tenable One · Rapid7 InsightVM · Qualys VMDR · Greenbone/OpenVAS · Nucleus Security · DefectDojo · OSV.dev · VulnCheck</p>
+    </div>
+    <div class="box box--gnat">
+      <h3>Identity &amp; ITDR (5)</h3>
+      <p>Okta · Microsoft Entra ID · Ping Identity · Silverfort · Semperis DSP</p>
+    </div>
+    <div class="box box--gnat">
+      <h3>Malware Sandboxes (6) + More</h3>
+      <p>ANY.RUN · Joe Sandbox · Hybrid Analysis · VMRay · Intezer · Cuckoo · MDR (Huntress, Arctic Wolf, Red Canary) · Email Security · Insider Risk · DFIR · BAS · DevSecOps</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Let the audience find themselves in this list. Don't read it — pause and let them scan. The goal is recognition: "we already use Splunk and SentinelOne, those are both here." That moment of recognition does more work than any pitch. If someone asks about a specific tool not shown, the answer is: 19 categories, 159 connectors — check the full catalogue at the GNAT docs.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     06  STIX 2.1 AS THE CONTRACT (was 05)
      ═══════════════════════════════════════════════════════ -->
 <section data-background-color="#0f0f11">
   <span class="kicker">Data Standard</span>
