@@ -41,6 +41,7 @@
   --sense:   #8a3aa4;
   --sand:    #da7e20;
   --red:     #d91d14;
+  --gui:     #2d8cb8;
 }
 
 /* ── Explicit base colors (ensure visibility without a Reveal base theme) ── */
@@ -287,6 +288,8 @@ body,
 .reveal .box--sand  h3 { color: #da7e20; }
 .reveal .box--red   { border-color: #d91d14; }
 .reveal .box--red   h3 { color: #d91d14; }
+.reveal .box--gui   { border-color: #2d8cb8; }
+.reveal .box--gui   h3 { color: #2d8cb8; }
 
 /* ── Callout ── */
 
@@ -374,6 +377,8 @@ body,
 .reveal .flow-node--sand  strong { color: #da7e20; }
 .reveal .flow-node--red   { border-color: #d91d14; }
 .reveal .flow-node--red   strong { color: #d91d14; }
+.reveal .flow-node--gui   { border-color: #2d8cb8; }
+.reveal .flow-node--gui   strong { color: #2d8cb8; }
 
 .reveal .flow-arrow {
   display: flex;

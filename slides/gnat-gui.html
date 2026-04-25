@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GNAT-gui — Desktop Analyst Interface</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <link rel="stylesheet" href="gnat-theme.css?v=3">
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+
+<!-- ═══════════════════════════════════════════════════════
+     01  TITLE
+     ═══════════════════════════════════════════════════════ -->
+<section class="slide-title" data-background-color="#0f0f11">
+  <img class="title-logo" src="../images/gnat-o-sphere-256.png" alt="GNAT-o-sphere">
+  <h1 style="color: #2d8cb8;">GNAT-gui</h1>
+  <p class="title-sub">Desktop Analyst Interface for the GNAT Ecosystem</p>
+  <p class="title-tagline">Structured investigations, hypothesis tracking, detection rules, and automated reporting — no CLI required.</p>
+  <aside class="notes">
+    GNAT-gui deep dive. Audience: analysts and investigators who need a structured workspace, managers evaluating analyst tooling, and engineers assessing integration requirements. We'll cover the problem GNAT-gui solves, the three core modules, and the tech that underpins it.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     02  THE PROBLEM
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">The Problem</span>
+  <h2>GNAT is powerful. The CLI is a barrier.</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li>Most threat analysts are not comfortable in a terminal — and they shouldn't have to be</li>
+      <li>Investigation context lives in Confluence pages, spreadsheets, and analyst heads — not in the tool</li>
+      <li>Detection rules authored in ad-hoc editors have no traceability back to the investigation that motivated them</li>
+      <li>Reporting is manual: copy findings, format, export — a multi-hour task for every report</li>
+    </ul>
+    <div class="box box--gui">
+      <h3>The interface gap</h3>
+      <p>GNAT's analytical power is fully accessible today — if you use the CLI and API directly. GNAT-gui brings that power to analysts who work visually, in structured workflows, without needing to learn a command line.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    This is not about dumbing the tool down — it's about removing a prerequisite that has nothing to do with analytical skill. The analyst who builds the best threat model shouldn't be blocked by not knowing Python or shell. GNAT-gui removes that gate.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     03  WHAT GNAT-GUI IS
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Overview</span>
+  <h2 style="color: #2d8cb8;">Three modules. One analyst workspace.</h2>
+  <span class="accent-rule"></span>
+  <div class="cols-3">
+    <div class="box box--gui">
+      <h3>Analysis</h3>
+      <p>Structured threat intelligence investigations with NATO Admiralty Scale scoring, AI-assisted gap detection, and automated report generation.</p>
+    </div>
+    <div class="box box--gui">
+      <h3>Rules Builder</h3>
+      <p>Visual detection rule authoring in Hy, YAML, or Prolog. Monaco editor, 26-predicate palette, full GNAT workflow engine integration.</p>
+    </div>
+    <div class="box box--gui">
+      <h3>Investigations</h3>
+      <p>5-step evidence pipeline on a React Flow canvas. Evidence nodes, relationship edges, STIX materialization, and exportable investigation packages.</p>
+    </div>
+  </div>
+  <div class="callout">
+    All three modules run locally as a desktop application. GNAT core is embedded as a Python library — no network hop, no separate server to maintain.
+  </div>
+  <aside class="notes">
+    The three modules map to the three things analysts actually spend their time doing: making sense of intelligence, writing detection logic, and building investigation records. GNAT-gui surfaces all three in one application rather than spreading them across a terminal, a rule editor, and a note-taking tool.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     04  ANALYSIS MODULE
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Module 1</span>
+  <h2>Analysis — structured intelligence work</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li><strong>NATO Admiralty Scale scoring</strong> — source reliability (A–F) and information credibility (1–6) on every piece of intelligence, built into the workflow</li>
+      <li><strong>AI gap detection</strong> — surfaces missing evidence, unresolved hypotheses, and analytical blind spots as you work</li>
+      <li><strong>Structured hypothesis tracking</strong> — manage competing hypotheses against the evidence record, not in a document</li>
+      <li><strong>Automated report generation</strong> — turn a completed investigation into a formatted, exportable report without manual formatting</li>
+    </ul>
+    <div class="box box--gui">
+      <h3>Analytical rigor, built in</h3>
+      <p>The NATO Admiralty Scale and structured hypothesis management aren't add-ons — they're the workflow. Every investigation produces a traceable, scored evidence record that feeds directly into the report.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    For analysts: this is about turning the discipline of structured analytic techniques into a default behavior rather than an extra step. The scale is already there — you don't have to remember to apply it. AI gap detection is about catching what you're not looking at, not replacing the analyst.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     05  RULES BUILDER MODULE
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Module 2</span>
+  <h2>Rules Builder — detection without friction</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li><strong>Three rule languages</strong> — Hy (Lisp-like, expressive), YAML (declarative, readable), Prolog (logic-based, relational)</li>
+      <li><strong>26-predicate palette</strong> — pre-built logical building blocks for common detection patterns, drag-and-drop composition</li>
+      <li><strong>Monaco editor</strong> — the same editor that powers VS Code, with syntax highlighting and validation</li>
+      <li><strong>GNAT workflow engine integration</strong> — rules author directly into the live pipeline, not into a separate file to be deployed later</li>
+    </ul>
+    <div class="box box--gui">
+      <h3>From investigation to detection</h3>
+      <p>Rules authored in GNAT-gui are traceable back to the investigation that motivated them. No more detection logic disconnected from the intelligence that inspired it.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    The three language options serve different analyst profiles. Hy for engineers who want expressiveness. YAML for analysts who want readability. Prolog for analysts reasoning about relationships. The palette means you don't have to start from scratch — you compose from tested building blocks. The traceability story is important for audit and compliance contexts.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     06  INVESTIGATIONS MODULE
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Module 3</span>
+  <h2>Investigations — visual evidence pipelines</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li><strong>React Flow canvas</strong> — drag-and-drop evidence graph; nodes for artifacts, edges for relationships</li>
+      <li><strong>5-step evidence pipeline</strong> — Collect → Assess → Correlate → Conclude → Report, enforced by the workflow</li>
+      <li><strong>STIX materialization</strong> — the investigation graph exports as a STIX 2.1 bundle, portable and standards-compliant</li>
+      <li><strong>Exportable packages</strong> — share the full investigation record, not just a report, with other tools and teams</li>
+    </ul>
+    <div class="box box--gui">
+      <h3>Graph-first investigation</h3>
+      <p>Building the investigation as a graph rather than a document forces the analyst to be explicit about what connects to what — and makes gaps visible before the report is written.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    The 5-step pipeline is the key structure. Collect and Assess happen before any correlation — so you're evaluating evidence quality before you start drawing connections. The STIX export means the investigation output is machine-readable and can feed into other GNAT ecosystem tools without re-entry.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     07  THE 5-STEP PIPELINE
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Evidence Pipeline</span>
+  <h2>Five steps from evidence to exportable record</h2>
+  <span class="accent-rule"></span>
+  <div class="flow-row" style="margin-top: 1rem;">
+    <div class="flow-col">
+      <div class="flow-node flow-node--gui">
+        <span class="fn-step">Step 1</span>
+        <strong>Collect</strong>
+        <span>Ingest indicators, artifacts, and raw intelligence into the investigation workspace</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-col">
+      <div class="flow-node flow-node--gui">
+        <span class="fn-step">Step 2</span>
+        <strong>Assess</strong>
+        <span>Score each piece of evidence on the NATO Admiralty Scale before drawing any conclusions</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-col">
+      <div class="flow-node flow-node--gui">
+        <span class="fn-step">Step 3</span>
+        <strong>Correlate</strong>
+        <span>Build relationships on the React Flow canvas; link evidence to hypotheses</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-col">
+      <div class="flow-node flow-node--gui">
+        <span class="fn-step">Step 4</span>
+        <strong>Conclude</strong>
+        <span>Resolve hypotheses against the scored evidence record; AI flags analytical gaps</span>
+      </div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-col">
+      <div class="flow-node flow-node--gui">
+        <span class="fn-step">Step 5</span>
+        <strong>Report</strong>
+        <span>Generate formatted report and STIX 2.1 bundle export automatically</span>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    The pipeline enforces order for a reason: you assess evidence quality before you correlate it, so you don't build conclusions on unvetted data. The gap detection at step 4 is the safety net — it catches "you concluded X but have no evidence linking Y" before the report goes out.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     08  FOR ANALYSTS
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="role-tag" style="background: #2d8cb8;">For Analysts</span>
+  <h2>Do the work in the tool, not around it</h2>
+  <span class="accent-rule"></span>
+  <ul class="spaced">
+    <li>No CLI, no Python, no setup — install and open</li>
+    <li>Investigations are first-class objects: structured, scored, exportable, and traceable</li>
+    <li>Hypothesis tracking is part of the workflow — not a sticky note on a separate document</li>
+    <li>Detection rules link back to the investigation that motivated them</li>
+    <li>Reports generate automatically from the investigation record — formatting is not your job</li>
+    <li>STIX export means your work travels to any tool that speaks the standard</li>
+  </ul>
+  <aside class="notes">
+    For analysts: the core message is that the investigation record and the analytical product are the same thing. You don't finish the investigation and then write about it — GNAT-gui produces the artifact as you work. That changes the time cost of structured analysis dramatically.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     09  FOR ENGINEERS
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="role-tag" style="background: #2a2a34; color: var(--muted);">For Engineers</span>
+  <h2>React 18 + TypeScript + FastAPI — GNAT embedded</h2>
+  <span class="accent-rule"></span>
+  <div class="cols">
+    <ul class="spaced">
+      <li><strong>Frontend</strong> — React 18, TypeScript 5, Vite; React Flow for the investigation canvas</li>
+      <li><strong>Backend</strong> — FastAPI 0.111+; GNAT core runs as an embedded Python library — no separate server or network hop</li>
+      <li><strong>Editor</strong> — Monaco Editor (the VS Code engine) for rules authoring with full syntax support</li>
+      <li><strong>Output</strong> — STIX 2.1 bundles; all investigation exports are standards-compliant</li>
+    </ul>
+    <div class="box box--gui">
+      <h3>Embedded, not federated</h3>
+      <p>GNAT core runs in-process as a Python library. No separate GNAT server to deploy or maintain alongside GNAT-gui. The application is self-contained.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    For engineers: the embedded architecture is the key deployment story. You ship GNAT-gui and GNAT core ships with it — no separate service to stand up, no API credentials to manage. The FastAPI layer is thin; it exists to bridge the React frontend to the Python library. The Monaco editor means you get a production-quality editing experience without building one.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     10  GETTING STARTED
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Adoption</span>
+  <h2>Getting started with GNAT-gui</h2>
+  <span class="accent-rule"></span>
+  <ol class="step-list">
+    <li>Install GNAT-gui — GNAT core is bundled; no separate installation required</li>
+    <li>Open the application and connect to your existing GNAT data sources and connector configuration</li>
+    <li>Start an investigation: pull in indicators, score them, begin building the evidence graph</li>
+    <li>Author detection rules in the Rules Builder tied to the active investigation</li>
+    <li>At conclusion, generate a report and export a STIX 2.1 bundle — ready for sharing or downstream tooling</li>
+  </ol>
+  <div class="callout">
+    GNAT-gui does not require a running GNAT server. If you already have GNAT deployed, GNAT-gui connects to it. If not, GNAT core embedded in GNAT-gui is the starting point.
+  </div>
+  <aside class="notes">
+    The adoption path for GNAT-gui is low-friction precisely because GNAT core is embedded. An analyst can start using GNAT-gui without waiting for an infrastructure team to deploy a backend. For teams already running GNAT, GNAT-gui is an additional interface layer — not a migration.
+  </aside>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     11  CTA / RESOURCES
+     ═══════════════════════════════════════════════════════ -->
+<section data-background-color="#0f0f11">
+  <span class="kicker">Resources</span>
+  <h2>Next steps</h2>
+  <span class="accent-rule"></span>
+  <div class="cta-grid">
+    <div class="cta-item">
+      <span class="label">Documentation</span>
+      <a href="https://wrhalpin.github.io/GNAT-gui/">wrhalpin.github.io/GNAT-gui</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Source code</span>
+      <a href="https://github.com/wrhalpin/GNAT-gui">github.com/wrhalpin/GNAT-gui</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Ecosystem hub</span>
+      <a href="https://wrhalpin.github.io/gnat-o-sphere/">wrhalpin.github.io/gnat-o-sphere</a>
+    </div>
+    <div class="cta-item">
+      <span class="label">Ecosystem overview</span>
+      <a href="ecosystem.html">GNAT-o-sphere deck</a>
+    </div>
+  </div>
+  <aside class="notes">
+    Close with docs and GitHub. If questions come up about how GNAT-gui integrates with SandGNAT or SenseGNAT findings in an investigation, direct to the ecosystem overview deck which covers the full end-to-end workflow across all five tools.
+  </aside>
+</section>
+
+
+</div><!-- .slides -->
+</div><!-- .reveal -->
+
+<script type="module">
+  import Reveal from 'https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.esm.js';
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'fade',
+    width: 1280,
+    height: 720,
+    margin: 0.06,
+    center: false,
+    controls: true,
+    progress: true,
+  });
+</script>
+</body>
+</html>
